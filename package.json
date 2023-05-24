@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon --exec ts-node index.ts",
-    "test": "npx cypress run --browser chrome --headless --spec cypress/e2e/Tests.cy.ts"
+    "start": "nodemon -e js,ts,yaml,json,prisma --exec ts-node index.ts",
+    "test": "npx cypress run --browser chrome --headless --spec cypress/e2e/signUp.cy.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.17",
     "@types/node": "^18.16.0",
     "@types/npm": "^7.19.0",
@@ -19,10 +20,14 @@
     "install": "^0.13.0",
     "prisma": "^4.13.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "vue": "^3.3.4",
+    "vue-loader": "^17.1.1",
+    "vue-template-compiler": "^2.7.14"
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
+    "bcrypt": "^5.1.0",
     "cypress": "^12.10.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
