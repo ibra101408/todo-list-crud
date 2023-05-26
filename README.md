@@ -1,24 +1,13 @@
 # todo-list-crud
 
-## Project setup
-```
-npm install
-```
+## Installation
+- run `npm install` in the root directory
+- run `npx prisma db push` in the root directory
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Running
+- run `npm start` in the root directory
+- open `localhost:8080` in your browser
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Lints and fixes files
-```
-npm run lint
-```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+

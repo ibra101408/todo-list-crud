@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Todo List - Sign In</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List - Sign In</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
     <style>
         body {
-            background: rgba(98, 92, 92, 0.86);
+            background-color: rgba(98, 92, 92, 0.86);
             color: #ffffff;
         }
     </style>
     <body>
-
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="#">Todo List</a>
@@ -36,8 +35,104 @@
             </div>
         </nav>
 
+
         <div id="app" class="container mt-5">
             <h1>Sign In</h1>
+            <form>
+                <div class="mb-3">
+                    <label for="signin-email" class="form-label">Email address</label>
+                    <input type="email" v-model="signInEmail" class="form-control" id="signin-email" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="signin-password" class="form-label">Password</label>
+                    <input type="password" v-model="signInPassword" class="form-control" id="signin-password">
+                </div>
+                <button id="signin-submit" type="button" class="btn btn-primary" @click="submitSignInForm">Sign In</button>
+
+            </form>
         </div>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+                crossorigin="anonymous"></script>
+        <script>
+            const { createApp } = Vue;
+
+            createApp({
+                data() {
+                    return {
+                        signInEmail: '',
+                        signInPassword: '',
+                        sessionToken: '',
+                    }
+                },
+
+                created() {
+                    this.sessionToken = localStorage.getItem('sessionToken')
+                },
+
+                methods: {
+                    redirectToTodos() {
+                        window.location.href = "/todos"; // Redirect to the sign-in page
+                    },
+                    submitSignInForm: async function () {
+                        this.signIn(this.signInEmail, this.signInPassword)
+                    },
+
+                    signIn: async function (email, password) {
+                        let response = await this.send('POST', 'sessions', {
+                            email,
+                            password
+                        })
+
+                        if (response.ok) {
+                            alert('Sign in successful!');
+                            this.sessionToken = response.body.sessionToken
+                            localStorage.setItem('sessionToken', this.sessionToken)
+                            this.redirectToTodos();
+                        } else {
+                            alert('Invalid email or password. Please try again.');
+                        }
+                    },
+                    send: async function (action, collection, data) {
+                        try {
+                            const headers = { 'Content-Type': 'application/json' };
+
+                            // If we have a session token, add it to the headers
+                            if (this.sessionToken) {
+                                headers['Authorization'] = `Bearer ${this.sessionToken}`;
+                            }
+
+                            const response = await fetch('/' + collection, {
+                                method: action,
+                               // headers: { 'Content-Type': 'application/json' },
+                                headers: headers,
+                                body: JSON.stringify(data),
+                            });
+
+                            const responseText = await response.text();
+                            const responseObject = (() => {
+                                try { return JSON.parse(responseText); } catch { return responseText; }
+                            })();
+
+                            if (!response.ok) {
+                                if (response.status === 401) {
+                                    //vue.clearStorageAndToggleLoginButtons();
+                                    alert('Please sign in again.' + 401);
+                                }
+                                alert(`Error code ${response.status}:\n${responseObject.error || responseText}`);
+                                return { ok: false, status: response.status, body: responseObject || responseText };
+                            }
+
+                            return { ok: true, status: response.status, body: responseObject };
+
+                        } catch (error) {
+                            alert(`Error:\n${error}`);
+                            return { ok: false, status: 500, body: error };
+                        }
+                    }
+                }
+            }).mount('#app');
+        </script>
     </body>
 </html>
