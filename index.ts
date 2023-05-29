@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import yamljs from 'yamljs';
 import * as path from "path";
 import * as bcrypt from 'bcrypt'
+import { IRequestWithSession } from './custom'
 
 
 const app = express();
@@ -135,7 +136,7 @@ app.post('/sessions', async (req, res) => {
 })
 
 // Add authorization middleware
-const authorizeRequest = async (req: Request, res: Response, next: NextFunction) => {
+const authorizeRequest = async (req: IRequestWithSession, res: Response, next: NextFunction) => {
 
     // Validate session
     if (!req.headers.authorization) {
@@ -157,7 +158,7 @@ const authorizeRequest = async (req: Request, res: Response, next: NextFunction)
     })
 
     if (!session) {
-        return res.status(401).send('Invalid session token')
+        return res.status(401).send('Invalid session token (!session)')
     }
 
     // Add user to request
@@ -169,16 +170,16 @@ const authorizeRequest = async (req: Request, res: Response, next: NextFunction)
 
     // Validate user
     if (!user) {
-        return res.status(401).send('Invalid session token')
+        return res.status(401).send('Invalid session token (!user)')
     }
 
     // Add session to request
-    // @ts-ignore
+    req.userId = user.id
     req.sessionToken = sessionToken
 
     next()
 }
-app.delete('/sessions', authorizeRequest, async (req, res) => {
+app.delete('/sessions', authorizeRequest, async (req: IRequestWithSession, res) => {
     try {
         // Delete session
         await prisma.session.delete({
@@ -192,6 +193,50 @@ app.delete('/sessions', authorizeRequest, async (req, res) => {
     } catch (error) {
         // Return error response
         res.status(500).json({ error: 'Failed to sign out' });
+    }
+});
+
+// Get items
+app.get('/items', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
+
+    // Get items for the signed-in user
+    const items = await prisma.item.findMany({
+        where: {
+            userId: req.userId
+        }
+    })
+
+    // Return items
+    res.status(200).json(items)
+})
+
+app.post('/items', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
+
+    try {
+        const { description } = req.body;
+        const newDescription = String(description);
+        const userId = req.userId;
+
+        if (userId === undefined) {
+            throw new Error('User ID is not defined');
+        }
+
+        if (!newDescription) {
+            return res.status(400).send('Description required');
+        }
+
+        const newItem = await prisma.item.create({
+            data: {
+                description: newDescription,
+                userId
+            },
+        });
+
+        res.status(201).json(newItem);
+    }
+
+    catch (error) {
+        res.status(500).send((error as Error).message || 'Something went wrong')
     }
 });
 

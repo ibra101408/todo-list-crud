@@ -1,5 +1,6 @@
-declare namespace Express {
-    export interface Request {
-        sessionToken?: string
-    }
+import { Request } from 'express';
+
+export interface IRequestWithSession extends Request {
+    sessionToken?: string;
+    userId?: number;
 }

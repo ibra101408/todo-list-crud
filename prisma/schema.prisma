@@ -15,7 +15,6 @@ model User {
   email     String  @unique
   password  String?
   sessions  Session[]
-
 }
 
 model Session {
@@ -23,4 +22,10 @@ model Session {
   userId       Int
   expires      DateTime
   user         User @relation(fields: [userId], references: [id])
+}
+
+model Item {
+  id          Int     @id @default(autoincrement())
+  description String
+  userId      Int
 }

@@ -13,6 +13,9 @@
         background-color: rgba(98, 92, 92, 0.86);
         color: #ffffff;
     }
+    [v-cloak] {
+        display: none;
+    }
 </style>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -27,11 +30,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/todos">Todos!</a>
                 </li>
-                <li class="nav-item">
-
-                </li>
             </ul>
-
         </div>
     </div>
 </nav>
@@ -41,8 +40,34 @@
     <h1>Todos</h1>
 
     <button type="button" id="signout-submit" class="btn btn-success" @click="signOut">
-    Sign Out
-</button>
+        Sign Out
+    </button>
+
+    <div class="row container  d-flex justify-content-center" data-cy="item-container">
+        <div class="col-md-12">
+            <div class="card px-3" style="background: none">
+                <div class="card-body">
+                    <div class="add-items d-flex">
+                        <input type="text" class="form-control todo-list-input" placeholder="Add your tasks"
+                               v-model="newItemDescription" data-cy=add-item-input>
+                        <button class="add btn btn-primary font-weight-bold todo-list-add-btn" @click="addItem"
+                                data-cy=add-item-button>Add</button>
+                    </div>
+                    <h4 class="card-title">Awesome Todo list</h4>
+                    <div class="list-wrapper">
+                        <ul class="d-flex flex-column-reverse todo-list">
+                            <li v-for="item in items">
+                                <div class="form-check"> <label class="form-check-label">
+                                    <input class="checkbox" type="checkbox" >
+                                    {{ item.description }} <i class="input-helper"></i></label> </div> <i
+                                    class="remove mdi mdi-close-circle-outline"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Your todos content goes here -->
 </div>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -56,14 +81,39 @@
         data() {
             return {
                 sessionToken: '',
+                items: [],
+                newItemDescription: '',
+
             }
         },
 
         created() {
-            this.sessionToken = localStorage.getItem('sessionToken')
+            this.sessionToken = localStorage.getItem('sessionToken');
+            if (this.sessionToken) {
+                this.fetchItems();
+            }
         },
 
+
         methods: {
+            addItem: async function () {
+                const response = await this.send('POST', 'items', {
+                    description: this.newItemDescription,
+                });
+
+                if (response.ok) {
+                    this.items.push(response.body);
+                    this.newItemDescription = '';
+                }
+            },
+
+            async fetchItems() {
+                const response = await this.send('GET', 'items');
+                if (response.ok) {
+                    this.items = response.body;
+                    console.log("this itmes" , this.items)
+                }
+            },
             signOut: async function () {
                 try {
                     const response = await fetch('/sessions', {
@@ -75,6 +125,7 @@
                     });
 
                     if (response.ok) {
+                        await this.fetchItems()
                         this.clearStorageAndToggleLoginButtons();
                         this.redirectToMain();
                     } else {
@@ -116,7 +167,7 @@
 
                     if (!response.ok) {
                         if (response.status === 401) {
-                            alert('Please sign in again.' + 401);
+                           // alert('Please sign in again.(0)' + 401);
                         }
                         alert(`Error code ${response.status}:\n${responseObject.error || responseText}`);
                         return { ok: false, status: response.status, body: responseObject || responseText };
