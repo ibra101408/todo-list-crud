@@ -240,6 +240,35 @@ app.post('/items', authorizeRequest, async (req: IRequestWithSession, res: Respo
     }
 });
 
+app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
+
+    try {
+        const { id } = req.params;
+
+        const item = await prisma.item.findUnique({
+            where: {
+                id: Number(id),
+            },
+        });
+
+        if (!item || item.userId !== req.userId) {
+            return res.status(404).send('Item not found');
+        }
+
+        const deletedItem = await prisma.item.delete({
+            where: {
+                id: Number(id),
+            },
+        });
+
+        res.status(204).json(deletedItem);
+    }
+
+    catch (error) {
+        res.status(500).send((error as Error).message || 'Something went wrong')
+    }
+});
+
 // Listen to port
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}. Documentation at http://localhost:${port}/docs`);

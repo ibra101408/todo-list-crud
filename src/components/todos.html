@@ -13,6 +13,22 @@
         background-color: rgba(98, 92, 92, 0.86);
         color: #ffffff;
     }
+
+    .list-wrapper {
+        display: grid; /* Use grid to create a grid layout */
+        grid-template-columns: repeat(2, 1fr); /* Create two equal-sized columns */
+        gap: 20px; /* Add some spacing between the columns */
+    }
+
+    .list-wrapper li {
+        display: flex; /* Use flexbox to align items within each column */
+        align-items: center; /* Align items vertically in the center */
+        padding: 2px; /* Add some padding to each list item */
+    }
+
+    .delete-btn {
+        margin-left: auto; /* Move the delete button to the right within each column */
+    }
     [v-cloak] {
         display: none;
     }
@@ -28,7 +44,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/todos">Todos!</a>
+                    <a class="nav-link" href="/todos">Todos</a>
                 </li>
             </ul>
         </div>
@@ -61,6 +77,10 @@
                                     <input class="checkbox" type="checkbox" >
                                     {{ item.description }} <i class="input-helper"></i></label> </div> <i
                                     class="remove mdi mdi-close-circle-outline"></i>
+
+                                <button class="btn btn-danger btn-sm delete-btn" @click="confirmDelete(item)">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -114,6 +134,21 @@
                     console.log("this itmes" , this.items)
                 }
             },
+
+            confirmDelete(item) {
+                if (confirm("Do you really want to delete this item?")) {
+                    this.deleteItem(item);
+                }
+            },
+
+            deleteItem: async function (item) {
+                const response = await this.send('DELETE', `items/${item.id}`);
+                if (response.ok) {
+                    this.items = this.items.filter(i => i.id !== item.id);   // Remove the deleted item from the local items array
+
+                }
+            },
+
             signOut: async function () {
                 try {
                     const response = await fetch('/sessions', {
