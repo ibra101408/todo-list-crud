@@ -28,10 +28,13 @@
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
+    "@linthtml/linthtml": "^0.9.4",
     "bcrypt": "^5.1.0",
     "cypress": "^12.10.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
     "nodemon": "^2.0.22",
     "swagger-ui-express": "^4.6.2",
     "yamljs": "^0.3.0"
