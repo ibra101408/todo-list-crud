@@ -2,7 +2,7 @@
 
 
 describe('addTask', () => {
-    it('should signin a user', () => {
+    it('should add a task', () => {
         cy.visit('https://localhost:8080/');
         cy.contains('a', 'Sign In').click();
         cy.get('#signin-email').click();

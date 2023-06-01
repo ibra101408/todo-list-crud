@@ -1,0 +1,86 @@
+
+body {
+    background-color: #f5f5f5;
+    color: #333333;
+    font-family: Arial, sans-serif;
+}
+button {
+    border-radius: 100%;
+}
+.todos {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.add-items {
+    margin-bottom: 20px;
+}
+
+.todo-list-input {
+    flex: 1;
+    border-radius: 5px 0 0 5px;
+}
+
+.todo-list-add-btn {
+    border-radius: 0 5px 5px 0;
+}
+
+.list-wrapper {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-wrapper li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.task-description {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.completed {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.edit-button,
+.save-button,
+.cancel-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.btn-danger {
+    margin-left: auto;
+    margin-right: 1rem;
+}
+
+.edit-container{
+    display: flex;
+    padding-bottom: 15px;
+}
+
+@media (max-width: 576px) {
+    .list-wrapper li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .task-description {
+        margin-top: 5px;
+    }
+
+}
