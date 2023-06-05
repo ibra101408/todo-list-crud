@@ -4,22 +4,22 @@
 describe('Signin', () => {
 
     it('should signin a user', () => {
-        cy.visit('http://localhost:8080/');
+        cy.visit('https://localhost:8080/');
         cy.contains('a', 'Sign In').click();
         cy.get('#signin-email').type('existing_user');
         cy.get('#signin-password').click();
         cy.get('#signin-password').type('1234');
         cy.get('#signin-submit').click();
-        cy.url().should('contains', 'http://localhost:8080/todos');
+        cy.url().should('contains', 'https://localhost:8080/todos');
         cy.get('#signout-submit').click();
-        cy.url().should('contains', 'http://localhost:8080/');
+        cy.url().should('contains', 'https://localhost:8080/');
 
     });
 
     it('should not signin a user with wrong password', () => {
         const alertStub = cy.stub()
         cy.on('window:alert', alertStub)
-        cy.visit('http://localhost:8080/');
+        cy.visit('https://localhost:8080/');
         cy.contains('a', 'Sign In').click();
         cy.get('#signin-email').type('existing_user');
         cy.get('#signin-password').click();

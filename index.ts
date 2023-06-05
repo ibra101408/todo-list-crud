@@ -1,18 +1,35 @@
-import express, { NextFunction, Response } from 'express'
+import { NextFunction, Response, Request } from 'express';
+const express = require('express');
+const app = express();
+import * as https from 'https';
+import * as fs from 'fs';
+
+let httpsServer = https
+    .createServer(
+        // Provide the private and public key to the server by reading each
+        // file's content with the readFileSync() method.
+        {
+            key: fs.readFileSync("key.pem"),
+            cert: fs.readFileSync("cert.pem"),
+        },
+        app
+    )
+
+    .listen(8080, () => {
+        console.log("Server is running at port 8080 ");
+    });
 
 import { PrismaClient } from '@prisma/client';
-import * as dotenv from 'dotenv'
-import swaggerUi from 'swagger-ui-express';
-import yamljs from 'yamljs';
+const prisma = new PrismaClient();
+
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+import * as swaggerUi from 'swagger-ui-express';
+import * as yamljs from 'yamljs';
 import * as path from "path";
 import * as bcrypt from 'bcrypt'
 import { IRequestWithSession } from './custom'
-
-
-const app = express();
-const prisma = new PrismaClient();
-
-dotenv.config();
 
 app.use(express.json());
 
@@ -26,22 +43,42 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Set port
 const port = process.env.PORT || 8080;
 
+export interface PostUserRequest extends Request {
+    email: string,
+    password: string
+}
+
+interface PostUserResponse extends Response {
+}
+
+export interface PostSessionRequest extends Request {
+    email: string,
+    password: string
+}
+
+export interface DeleteSessionResponse extends Response {
+}
+
+export interface PostSessionResponse extends Response {
+    sessionToken: string
+}
+
 ///TODOS
-app.get('/todos', (req, res) => {
+app.get('/todos', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'src', 'components', 'todos.html'));
 });
 
-app.post('/todos', (req, res) => {
+app.post('/todos', (req: Request, res: Response) => {
     console.log('In the sign Up');
     // Handle the sign-up logic here
 });
 
 ///SIGN IN
-app.get('/signin', (req, res) => {
+app.get('/signin', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'src', 'components', 'signin.html'));
 });
 // Define a route for sign-in
-app.post('/signin', (req, res) => {
+app.post('/signin', (req: Request, res: Response) => {
 
     const { email, password } = req.body;
 
@@ -53,16 +90,16 @@ app.post('/signin', (req, res) => {
 });
 
 ////SIGN UP
-app.get('/signup', (req, res) => {
+app.get('/signup', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'src', 'components', 'signup.html'));
 });
 
-app.post('/signup', (req, res) => {
+app.post('/signup', (req: Request, res: Response) => {
     console.log('In the sign Up');
     // Handle the sign-up logic here
 });
 
-app.post('/users', async (req, res) => {
+app.post('/users', async (req: PostUserRequest, res: PostUserResponse) => {
     // Validate email and password
     if (!req.body.email || !req.body.password) {
         return res.status(400).send('Email and password required');
@@ -94,9 +131,8 @@ app.post('/users', async (req, res) => {
     res.status(201).end();
 });
 
-
             //Sessions//
-app.post('/sessions', async (req, res) => {
+app.post('/sessions', async (req: PostSessionRequest, res: PostSessionResponse) => {
 
     // Validate email and password
     if (!req.body.email || !req.body.password) {
@@ -158,7 +194,7 @@ const authorizeRequest = async (req: IRequestWithSession, res: Response, next: N
     })
 
     if (!session) {
-        return res.status(401).send('Invalid session token')
+        return res.status(401).send('Invalid session token (!session)')
     }
 
     // Add user to request
@@ -170,7 +206,7 @@ const authorizeRequest = async (req: IRequestWithSession, res: Response, next: N
 
     // Validate user
     if (!user) {
-        return res.status(401).send('Invalid session token')
+        return res.status(401).send('Invalid session token (!user)')
     }
 
     // Add session to request
@@ -179,7 +215,7 @@ const authorizeRequest = async (req: IRequestWithSession, res: Response, next: N
 
     next()
 }
-app.delete('/sessions', authorizeRequest, async (req: IRequestWithSession, res) => {
+app.delete('/sessions', authorizeRequest, async (req: IRequestWithSession, res:DeleteSessionResponse) => {
     try {
         // Delete session
         await prisma.session.delete({
@@ -269,7 +305,3 @@ app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res:
     }
 });
 
-// Listen to port
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}. Documentation at http://localhost:${port}/docs`);
-});

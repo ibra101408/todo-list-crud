@@ -2,14 +2,14 @@
 
 describe('deleteTask', () => {
     it("should delete a user's task", () => {
-    cy.visit('http://localhost:8080/');
+    cy.visit('https://localhost:8080/');
             cy.contains('a', 'Sign In').click();
             cy.get('#signin-email').click();
             cy.get('#signin-email').type('existing_user');
             cy.get('#signin-password').click();
             cy.get('#signin-password').type('1234');
             cy.get('#signin-submit').click();
-            cy.url().should('contains', 'http://localhost:8080/todos');
+            cy.url().should('contains', 'https://localhost:8080/todos');
             // Check if the text "delete me" exists and delete the item
             cy.contains('.list-wrapper li', 'delete me', { matchCase: false })
                 .then(($item) => {

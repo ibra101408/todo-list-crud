@@ -3,6 +3,9 @@ node_modules
 /dist
 /cypress.
 .env
+cert.pem
+csr.pem
+key.pem
 
 # local env files
 .env.local

@@ -49,7 +49,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/Session'
         required: true
       tags:
         - /sessions
@@ -91,6 +91,96 @@ paths:
         - Bearer: []
       summary: Destroy a Session
       description: Deletes a `Session`.
+  /items:
+    get:
+      tags:
+        - /items
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                '[{ "id": 1, "description": "s", "userId": 1}]':
+                  value:
+                    - id: 1
+                      description: s
+                      userId: 1
+          description: List of user items.
+      deprecated: false
+      security:
+        - Bearer: []
+      description: Get items
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+        required: true
+      tags:
+        - /items
+      responses:
+        '201':
+          content:
+            application/json:
+              examples:
+                Add item:
+                  value:
+                    id: 1
+                    description: s
+                    userId: 1
+          description: Item added
+        '400':
+          content:
+            text/html:
+              examples:
+                Description required:
+                  value: Description required
+          description: Bad Request. The request is missing or has an invalid 'description' field.
+        '401':
+          content:
+            text/html:
+              examples:
+                Authorization header required:
+                  value: Authorization header required
+                Invalid session token:
+                  value: Invalid session token
+                Invalid authorization header format:
+                  value: Invalid authorization header format
+          description: The client making the request lacks valid authentication credentials for the target resource.
+      security:
+        - Bearer: []
+  '/items/{id}':
+    delete:
+      tags:
+        - /items
+      responses:
+        '204':
+          description: Item successfully deleted
+        '401':
+          content:
+            text/html:
+              examples:
+                Authorization header required:
+                  value: Authorization header required
+                Invalid session token:
+                  value: Invalid session token
+                Invalid authorization header format:
+                  value: Invalid authorization header format
+          description: The client making the request lacks valid authentication credentials for the target resource.
+        '404':
+          content:
+            text/html:
+              examples:
+                Item not found:
+                  value: Item not found
+          description: Item not found
+      security:
+        - Bearer: []
+      parameters:
+        - name: id
+          in: path
+          required: true
 components:
   schemas:
     User:
