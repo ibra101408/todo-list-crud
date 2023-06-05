@@ -91,76 +91,6 @@ paths:
         - Bearer: []
       summary: Destroy a Session
       description: Deletes a `Session`.
-      /items:
-        get:
-          tags:
-            - /items
-          responses:
-            '200':
-              content:
-                application/json:
-                  examples:
-                    Get items:
-                      value:
-                        - id: 2
-                          description: tere
-                          userId: 26
-                        - id: 3
-                          description: tere
-                          userId: 26
-              description: List of user's items
-            '401':
-              content:
-                text/html:
-                  examples:
-                    Authorization header required:
-                      value: Authorization header required
-                    Invalid session token:
-                      value: Invalid session token
-                      Invalid authorization header format:
-                        value: Invalid authorization header format
-                  description: Unauthorized.
-          deprecated: false
-          security:
-            - Bearer: [ ]
-          description: Get items
-          post:
-            requestBody:
-              content:
-                application/json:
-                  schema:
-                    $ref: '#/components/schemas/item'
-              required: true
-            tags:
-              - /items
-            responses:
-              '201':
-                content:
-                  application/json:
-                    examples:
-                      Add item:
-                        value:
-                          id: 24
-                          description: fasdf
-                          userId: 26
-              '400':
-                content:
-                  text/html:
-                    examples:
-                      Description required:
-                        value: Description required
-              '401':
-                content:
-                  text/html:
-                    examples:
-                      Authorization header required:
-                        value: Authorization header required
-                      Invalid session token:
-                        value: Invalid session token
-                      Invalid authorization header format:
-                        value: Invalid authorization header format
-            security:
-              - Bearer: [ ]
 components:
   schemas:
     User:
@@ -184,8 +114,8 @@ components:
           type: string
       example:
         sessionToken: 2b3c3338-7fd4-4434-8f3d-cb4fbdeba0e0
-    item:
-      title: Root Type for item
+    Item:
+      title: Root Type for Item
       description: ''
       type: object
       properties:
@@ -198,9 +128,9 @@ components:
           format: int32
           type: integer
       example:
-        id: 25
-        description: jouuuu
-        userId: 26
+        id: 1
+        description: s
+        userId: 1
   securitySchemes:
     Bearer:
       scheme: bearer

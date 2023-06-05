@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express'
+import express, { NextFunction, Response } from 'express'
 
 import { PrismaClient } from '@prisma/client';
 import * as dotenv from 'dotenv'
@@ -158,7 +158,7 @@ const authorizeRequest = async (req: IRequestWithSession, res: Response, next: N
     })
 
     if (!session) {
-        return res.status(401).send('Invalid session token (!session)')
+        return res.status(401).send('Invalid session token')
     }
 
     // Add user to request
@@ -170,7 +170,7 @@ const authorizeRequest = async (req: IRequestWithSession, res: Response, next: N
 
     // Validate user
     if (!user) {
-        return res.status(401).send('Invalid session token (!user)')
+        return res.status(401).send('Invalid session token')
     }
 
     // Add session to request
@@ -233,6 +233,35 @@ app.post('/items', authorizeRequest, async (req: IRequestWithSession, res: Respo
         });
 
         res.status(201).json(newItem);
+    }
+
+    catch (error) {
+        res.status(500).send((error as Error).message || 'Something went wrong')
+    }
+});
+
+app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
+
+    try {
+        const { id } = req.params;
+
+        const item = await prisma.item.findUnique({
+            where: {
+                id: Number(id),
+            },
+        });
+
+        if (!item || item.userId !== req.userId) {
+            return res.status(404).send('Item not found');
+        }
+
+        const deletedItem = await prisma.item.delete({
+            where: {
+                id: Number(id),
+            },
+        });
+
+        res.status(204).json(deletedItem);
     }
 
     catch (error) {
