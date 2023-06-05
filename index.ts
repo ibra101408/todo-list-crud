@@ -276,6 +276,49 @@ app.post('/items', authorizeRequest, async (req: IRequestWithSession, res: Respo
     }
 });
 
+app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
+
+    try {
+        console.log(req.body)
+        // Get id from req.params
+        const { id } = req.params;
+        const { description, completed } = req.body;
+        const newDescription = String(description);
+
+
+        if (!description) {
+            return //res.status(400).send('Description required2 ');
+        }
+
+        const item = await prisma.item.findUnique({
+            where: {
+                id: Number(id),
+            },
+        });
+
+        if (!item || item.userId !== req.userId) {
+            return res.status(404).send('Item not found');
+        }
+
+        const updatedItem = await prisma.item.update({
+            where: {
+                id: Number(id),
+            },
+            data: {
+                description,
+                completed: Boolean(completed),
+            },
+
+        });
+
+        res.status(200).json(updatedItem);
+    }
+
+    catch (error) {
+        res.status(500).send((error as Error).message || 'Something went wrong')
+    }
+});
+
 app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
 
     try {

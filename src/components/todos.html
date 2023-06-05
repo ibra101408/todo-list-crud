@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List - Todos</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link type="text/css" rel="stylesheet" href="style.css">
@@ -32,9 +31,9 @@
         <div id="app" class="container mt-5">
             <h1 class="todos">Todos</h1>
 
-            <button type="button" id="signout-submit" class="btn btn-success" @click="signOut">
-                Sign Out
-            </button>
+    <button type="button" id="signout-submit" class="btn btn-success" @click="signOut">
+        Sign Out
+    </button>
 
             <div class="row container  d-flex justify-content-center" data-cy="item-container">
                 <div class="col-md-12">
@@ -101,32 +100,33 @@
                         }
                     },
 
-                    created() {
-                        this.sessionToken = localStorage.getItem('sessionToken');
-                        if (this.sessionToken) {
-                            this.fetchItems();
-                        }
-                    },
+        created() {
+            this.sessionToken = localStorage.getItem('sessionToken');
+            if (this.sessionToken) {
+                this.fetchItems();
+            }
+        },
 
-                    methods: {
-                        addItem: async function () {
-                            const response = await this.send('POST', 'items', {
-                                description: this.newItemDescription,
-                            });
 
-                            if (response.ok) {
-                                this.items.push(response.body);
-                                this.newItemDescription = '';
-                            }
-                        },
+        methods: {
+            addItem: async function () {
+                const response = await this.send('POST', 'items', {
+                    description: this.newItemDescription,
+                });
 
-                        async fetchItems() {
-                            const response = await this.send('GET', 'items');
-                            if (response.ok) {
-                                this.items = response.body;
-                                console.log("this itmes" , this.items)
-                            }
-                        },
+                if (response.ok) {
+                    this.items.push(response.body);
+                    this.newItemDescription = '';
+                }
+            },
+
+            async fetchItems() {
+                const response = await this.send('GET', 'items');
+                if (response.ok) {
+                    this.items = response.body;
+                    console.log("this itmes" , this.items)
+                }
+            },
 
                         // Show edit input value
                         showEditInput(item) {
@@ -179,23 +179,23 @@
                             }
                         },
 
-                        deleteItem: async function (item) {
-                            const response = await this.send('DELETE', `items/${item.id}`);
-                            if (response.ok) {
-                                this.items = this.items.filter(i => i.id !== item.id);   // Remove the deleted item from the local items array
+            deleteItem: async function (item) {
+                const response = await this.send('DELETE', `items/${item.id}`);
+                if (response.ok) {
+                    this.items = this.items.filter(i => i.id !== item.id);   // Remove the deleted item from the local items array
 
-                            }
-                        },
+                }
+            },
 
-                        signOut: async function () {
-                            try {
-                                const response = await fetch('/sessions', {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'Authorization': `Bearer ${this.sessionToken}`
-                                    }
-                                });
+            signOut: async function () {
+                try {
+                    const response = await fetch('/sessions', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.sessionToken}`
+                        }
+                    });
 
                                 if (response.ok) {
                                     this.clearStorageAndToggleLoginButtons();
@@ -210,42 +210,42 @@
                         },
 
 
-                        clearStorageAndToggleLoginButtons: function () {
-                            this.sessionToken = '';
-                            localStorage.removeItem('sessionToken');
-                        },
-                        redirectToMain() {
-                            window.location.href = "/"; // Redirect to the main page
-                        },
-                        send: async function (action, collection, data) {
-                            try {
-                                const headers = { 'Content-Type': 'application/json' };
+            clearStorageAndToggleLoginButtons: function () {
+                this.sessionToken = '';
+                localStorage.removeItem('sessionToken');
+            },
+            redirectToMain() {
+                window.location.href = "/"; // Redirect to the main page
+            },
+            send: async function (action, collection, data) {
+                try {
+                    const headers = { 'Content-Type': 'application/json' };
 
-                                // If we have a session token, add it to the headers
-                                if (this.sessionToken) {
-                                    headers['Authorization'] = `Bearer ${this.sessionToken}`;
-                                }
+                    // If we have a session token, add it to the headers
+                    if (this.sessionToken) {
+                        headers['Authorization'] = `Bearer ${this.sessionToken}`;
+                    }
 
-                                const response = await fetch('/' + collection, {
-                                    method: action,
-                                    headers: headers,
-                                    body: JSON.stringify(data),
-                                });
+                    const response = await fetch('/' + collection, {
+                        method: action,
+                        headers: headers,
+                        body: JSON.stringify(data),
+                    });
 
-                                const responseText = await response.text();
-                                const responseObject = (() => {
-                                    try { return JSON.parse(responseText); } catch { return responseText; }
-                                })();
+                    const responseText = await response.text();
+                    const responseObject = (() => {
+                        try { return JSON.parse(responseText); } catch { return responseText; }
+                    })();
 
-                                if (!response.ok) {
-                                    if (response.status === 401) {
-                                       // alert('Please sign in again.(0)' + 401);
-                                    }
-                                    alert(`Error code ${response.status}:\n${responseObject.error || responseText}`);
-                                    return { ok: false, status: response.status, body: responseObject || responseText };
-                                }
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                           // alert('Please sign in again.(0)' + 401);
+                        }
+                        alert(`Error code ${response.status}:\n${responseObject.error || responseText}`);
+                        return { ok: false, status: response.status, body: responseObject || responseText };
+                    }
 
-                                return { ok: true, status: response.status, body: responseObject };
+                    return { ok: true, status: response.status, body: responseObject };
 
                             } catch (error) {
                                 alert(`Error1:\n${error}`);
