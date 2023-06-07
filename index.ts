@@ -18,6 +18,11 @@ let httpsServer = https
     .listen(8080, () => {
         console.log("Server is running at port 8080 ");
     });
+const expressWs = require('express-ws')(app, httpsServer);
+
+    app.ws('/', function () {
+
+});
 
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
@@ -41,7 +46,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set port
-const port = process.env.PORT || 8080;
+//const port = process.env.PORT || 8080;
 
 export interface PostUserRequest extends Request {
     email: string,
@@ -69,8 +74,6 @@ app.get('/todos', (req: Request, res: Response) => {
 });
 
 app.post('/todos', (req: Request, res: Response) => {
-    console.log('In the sign Up');
-    // Handle the sign-up logic here
 });
 
 ///SIGN IN
@@ -95,8 +98,6 @@ app.get('/signup', (req: Request, res: Response) => {
 });
 
 app.post('/signup', (req: Request, res: Response) => {
-    console.log('In the sign Up');
-    // Handle the sign-up logic here
 });
 
 app.post('/users', async (req: PostUserRequest, res: PostUserResponse) => {
@@ -244,23 +245,19 @@ app.get('/items', authorizeRequest, async (req: IRequestWithSession, res: Respon
 
     // Return items
     res.status(200).json(items)
-})
+});
 
 app.post('/items', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
-
     try {
         const { description } = req.body;
         const newDescription = String(description);
         const userId = req.userId;
-
         if (userId === undefined) {
             throw new Error('User ID is not defined');
         }
-
         if (!newDescription) {
             return res.status(400).send('Description required');
         }
-
         const newItem = await prisma.item.create({
             data: {
                 description: newDescription,
@@ -268,7 +265,14 @@ app.post('/items', authorizeRequest, async (req: IRequestWithSession, res: Respo
             },
         });
 
-        res.status(201).json(newItem);
+        res.status(201).json("newItem");
+
+        expressWs.getWss().clients.forEach((client: any) => client.send(JSON.stringify({
+            type: 'create',
+            item: newItem
+        })));
+
+        res.status(201).end();
     }
 
     catch (error) {
@@ -311,6 +315,16 @@ app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Re
 
         });
 
+        expressWs.getWss().clients.forEach(
+            (client: any) =>
+                client.send(JSON.stringify({
+                    type: 'update',
+                    id: updatedItem.id,
+                    description: updatedItem.description,
+                    completed: updatedItem.completed,
+                }))
+        );
+
         res.status(200).json(updatedItem);
     }
 
@@ -339,8 +353,15 @@ app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res:
                 id: Number(id),
             },
         });
+       expressWs.getWss().clients.forEach(
+           (client: any) =>
+                client.send(JSON.stringify({
+                    type: 'delete',
+                    id: deletedItem.id
+            }))
+       );
 
-        res.status(204).json(deletedItem);
+        res.status(201).json(item);
     }
 
     catch (error) {
