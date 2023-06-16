@@ -1,8 +1,10 @@
-import { NextFunction, Response, Request } from 'express';
+import {NextFunction, Response, Request} from 'express';
 const express = require('express');
+const sessions = require('express-session');
 const app = express();
 import * as https from 'https';
 import * as fs from 'fs';
+
 
 let httpsServer = https
     .createServer(
@@ -15,6 +17,7 @@ let httpsServer = https
         app
     )
 
+    //
     .listen(8080, () => {
         console.log("Server is running at port 8080 ");
     });
@@ -65,21 +68,182 @@ export interface DeleteSessionResponse extends Response {
 }
 
 export interface PostSessionResponse extends Response {
-    sessionToken: string
+    sessionToken: string;
+    isGoogleUser: boolean;
+
 }
+
 
 ///TODOS
 app.get('/todos', (req: Request, res: Response) => {
+    //console.log(req.sessionToken);
     res.sendFile(path.join(__dirname, 'src', 'components', 'todos.html'));
 });
 
 app.post('/todos', (req: Request, res: Response) => {
 });
 
+
+///GOOGLE
+
+function isLoggedIn(req: IRequestWithSession, res: Response, next: NextFunction) {
+    //console.log(req.sessionToken);
+    req.user  ? next() : res.sendStatus(401);
+};
+
+
+require('./auth');
+const passport = require('passport');
+app.use(sessions({ secret: 'cats' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//google auth
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+
+);
+
+app.get('/google/callback',
+    async (req: IRequestWithSession, res: Response) => {
+        // Generate and set a session token for the user here
+
+        const session = await prisma.session.create({
+            data: {
+                userId: 1,
+                expires: new Date(),
+            },
+        });
+        res.status(201).json({
+            sessionToken: session.sessionToken,
+            isGoogleUser: true,
+        })
+
+        // If authentication is successful, redirect to /todos
+        passport.authenticate('google', {
+            successRedirect: '/todos',
+            failureRedirect: '/auth/failure'
+        });
+    });
+//google callback
+/*
+app.get('/google/callback',
+    passport.authenticate('google', {
+        successRedirect: '/todos',
+        failureRedirect: '/auth/failure'
+    }),
+);*/
+
+//failure
+app.get ('/auth/failure', (req: Request, res: Response) => {
+    res.send('Failed to authenticate..');
+});
+
+app.get('/logout', (req: IRequestWithSession, res: Response) => {
+    req.logout((err: Error) => {
+        if (err) {
+            // Handle error
+            return res.status(500).json({ error: 'Failed to log out' });
+        }
+
+        req.session.destroy();
+        res.send('Goodbye!');
+    });
+});
+/*
+app.get('/google/callback',
+    async (req: IRequestWithSession, res: Response) => {
+    // Generate and set a session token for the user here
+    console.log("we are here222");
+
+    const session = await prisma.session.create({
+        data: {
+            userId: 1,
+            expires: new Date(),
+        },
+});
+    console.log("we are here");
+    res.status(201).json({
+        sessionToken: session.sessionToken,
+        isGoogleUser: true,
+    })
+
+        console.log("we are here3");
+    // If authentication is successful, redirect to /todos
+    passport.authenticate('google', {
+        successRedirect: '/todos',
+        failureRedirect: '/auth/failure'
+    });
+
+});*////
+/*
+app.get('/google/callback', async (req: IRequestWithSession, res: Response, next: NextFunction) => {
+    try {
+        // Generate and set a session token for the user here
+        console.log("we are here222");
+
+        const session = await prisma.session.create({
+            data: {
+                userId: 1,
+                expires: new Date(),
+            },
+        });
+
+        console.log("we are here");
+
+        // Save the session token in local storage
+        localStorage.setItem('sessionToken', session.sessionToken);
+
+        res.status(201).json({
+            sessionToken: session.sessionToken,
+            isGoogleUser: true,
+        });
+
+        console.log("we are here3");
+        // If authentication is successful, redirect to /todos
+        passport.authenticate('google', {
+            successRedirect: '/todos',
+            failureRedirect: '/auth/failure'
+        })(req, res, next);
+    } catch (error) {
+        // Handle any errors that occur during session creation or JSON response
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});*/
+
+
+
+    /*async (req: IRequestWithSession, res: PostSessionResponse) => {
+    // Create session for Google user
+    const session = await prisma.session.create({
+        data: {
+            userId: req.user.id,
+            expires: new Date(),
+        },
+    });
+
+    // Return session token and set isGoogleUser flag to true
+    res.status(201).json({
+        sessionToken: session.sessionToken,
+        isGoogleUser: true,
+    });
+});
+*/
+
+//protected route
+/*app.get('/protected', isLoggedIn, (req: IRequestWithSession, res: Response) => {
+    res.send(`Hello ${req.user.displayName}`);
+});*/
+
+
 ///SIGN IN
 app.get('/signin', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'src', 'components', 'signin.html'));
+
+//    res.send('<a href="/auth/google">Auth with Google</a>');
 });
+
 // Define a route for sign-in
 app.post('/signin', (req: Request, res: Response) => {
 
@@ -172,6 +336,21 @@ app.post('/sessions', async (req: PostSessionRequest, res: PostSessionResponse) 
     })
 })
 
+app.post('/googleSessions', async (req: PostSessionRequest, res: PostSessionResponse) => {
+    // Create session
+    const session = await prisma.session.create({
+        data: {
+            userId: 999,
+            expires: new Date(),
+        }
+    });
+
+    // Return session
+    res.status(201).json({
+        sessionToken: session.sessionToken
+    })
+});
+
 // Add authorization middleware
 const authorizeRequest = async (req: IRequestWithSession, res: Response, next: NextFunction) => {
 
@@ -216,6 +395,62 @@ const authorizeRequest = async (req: IRequestWithSession, res: Response, next: N
 
     next()
 }
+/*const authorizeRequest = async (req: IRequestWithSession, res: Response, next: NextFunction) => {
+    // Validate session
+    if (!req.headers.authorization) {
+        return res.status(401).send('Authorization header required');
+    }
+
+    // Validate extract session format
+    if (!req.headers.authorization.startsWith('Bearer') || req.headers.authorization.split(' ').length !== 2) {
+        return res.status(401).send('Invalid authorization header format');
+    }
+
+    // Extract sessionToken
+    const sessionToken = req.headers.authorization.split(' ')[1];
+
+    const session = await prisma.session.findUnique({
+        where: {
+            sessionToken: sessionToken,
+        },
+    });
+
+    if (!session) {
+        return res.status(401).send('Invalid session token');
+    }
+
+    // Check if the user is a Google user
+    if (req.user && req.user.provider === 'google') {
+        req.isGoogleUser = true;
+    }
+
+    // Add user to request
+    let user;
+    if (req.isGoogleUser) {
+        user = req.user;
+    } else {
+        user = await prisma.user.findUnique({
+            where: {
+                id: session.userId,
+            },
+        });
+    }
+
+    // Validate user
+    if (!user) {
+        return res.status(401).send('Invalid session token');
+    }
+
+    // Add session to request
+    req.userId = user.id;
+    req.sessionToken = session.sessionToken; // Use session.sessionToken here
+
+    next();
+};
+
+*/
+
+
 app.delete('/sessions', authorizeRequest, async (req: IRequestWithSession, res:DeleteSessionResponse) => {
     try {
         // Delete session
