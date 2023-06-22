@@ -42,6 +42,7 @@
     "express-session": "^1.17.3",
     "express-ws": "^5.0.2",
     "fs": "^0.0.1-security",
+    "google-auth-library": "^8.8.0",
     "https": "^1.0.0",
     "nodemon": "^2.0.22",
     "passport-google-oauth2": "^0.2.0",

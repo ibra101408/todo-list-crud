@@ -11,7 +11,9 @@
     <link type="text/css" rel="stylesheet" href="style.css">
 </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="#">Todo List</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -46,14 +48,66 @@
                 <button id="signin-submit" type="button" class="btn btn-primary" @click="submitSignInForm">Sign In</button>
 
             </form>
-            <a href="/auth/google" @click="submitSignInG">Auth with Google</a>
+
+            <div id="signInDiv"
+                 style="display: flex; justify-content: center; align-items: center; text-align: center; margin-top:5px;"></div>
+
         </div>
         <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
                 crossorigin="anonymous"></script>
-        <script>
-            const { createApp } = Vue;
+    <script src="https://unpkg.com/jwt-decode/build/jwt-decode.js"></script>
+
+    <script>
+
+            const {createApp} = Vue;
+
+            window.onload = function () {
+
+                google.accounts.id.initialize({
+                    client_id: '618208179476-n1rdmsujrjeidv3uqqgaj5l0rrtgefg8.apps.googleusercontent.com',
+                    callback: handleCredentialResponse,
+                });
+
+                google.accounts.id.renderButton(
+                    document.getElementById('signInDiv'),
+                    {
+                        theme: 'filled_blue',
+                        size: 'large',
+                        text: 'long',
+                        type: 'standard'
+                    }
+                )
+            };
+
+            function handleCredentialResponse(response) {
+                fetch('https://localhost:8080/auth/google', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(response)
+                })
+                    .then(response => {
+                        if (response.status === 201) {
+                            console.log("IS THAT IT?");
+                            return response.json();
+                        } else {
+                            throw new Error('Request failed. Returned status of ' + response.status + ' ' + response.statusText);
+                        }
+                    })
+                    .then(data => {
+                        let sessionToken = data.sessionToken;
+                        localStorage.setItem('sessionToken', sessionToken);
+                        Vue.sessionToken = sessionToken;
+                        console.log('Session Token: ' + sessionToken)
+                        window.location.href = "/todos";
+                    })
+                    .catch(error => {
+                        console.log('Error:', error);
+                    });
+            }
 
             createApp({
                 data() {
@@ -71,13 +125,6 @@
                 methods: {
                     redirectToTodos() {
                         window.location.href = "/todos"; // Redirect to the sign-in page
-                    },
-
-                    submitSignInG: async function() {
-                        /*let response = await this.send('GET', 'auth/google', {
-
-                        });*/
-                        window.location.href = "/auth/google";
                     },
 
                     submitSignInForm: async function () {
@@ -101,7 +148,7 @@
                     },
                     send: async function (action, collection, data) {
                         try {
-                            const headers = { 'Content-Type': 'application/json' };
+                            const headers = {'Content-Type': 'application/json'};
 
                             // If we have a session token, add it to the headers
                             if (this.sessionToken) {
@@ -110,30 +157,32 @@
 
                             const response = await fetch('/' + collection, {
                                 method: action,
-                               // headers: { 'Content-Type': 'application/json' },
                                 headers: headers,
                                 body: JSON.stringify(data),
                             });
 
                             const responseText = await response.text();
                             const responseObject = (() => {
-                                try { return JSON.parse(responseText); } catch { return responseText; }
+                                try {
+                                    return JSON.parse(responseText);
+                                } catch {
+                                    return responseText;
+                                }
                             })();
 
                             if (!response.ok) {
                                 if (response.status === 401) {
-                                    //vue.clearStorageAndToggleLoginButtons();
                                     alert('Please sign in again.' + 401);
                                 }
                                 alert(`Error code ${response.status}:\n${responseObject.error || responseText}`);
-                                return { ok: false, status: response.status, body: responseObject || responseText };
+                                return {ok: false, status: response.status, body: responseObject || responseText};
                             }
 
-                            return { ok: true, status: response.status, body: responseObject };
+                            return {ok: true, status: response.status, body: responseObject};
 
                         } catch (error) {
                             alert(`Error:\n${error}`);
-                            return { ok: false, status: 500, body: error };
+                            return {ok: false, status: 500, body: error};
                         }
                     }
                 }
