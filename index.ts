@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request } from 'express';
+import {NextFunction, Response, Request} from 'express';
 const express = require('express');
 const app = express();
 import * as https from 'https';
@@ -15,6 +15,7 @@ let httpsServer = https
         app
     )
 
+    //
     .listen(8080, () => {
         console.log("Server is running at port 8080 ");
     });
@@ -45,9 +46,6 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set port
-//const port = process.env.PORT || 8080;
-
 export interface PostUserRequest extends Request {
     email: string,
     password: string
@@ -65,8 +63,11 @@ export interface DeleteSessionResponse extends Response {
 }
 
 export interface PostSessionResponse extends Response {
-    sessionToken: string
+    sessionToken: string;
+    isGoogleUser: boolean;
+
 }
+
 
 ///TODOS
 app.get('/todos', (req: Request, res: Response) => {
@@ -76,10 +77,57 @@ app.get('/todos', (req: Request, res: Response) => {
 app.post('/todos', (req: Request, res: Response) => {
 });
 
+
+//GOOGLE
+app.post('/auth/google', async (req: PostUserRequest, res: PostUserResponse) => {
+
+    const response: any = req.body;
+
+    function decodeJwtResponse(response: any) {
+        const jwtToken = response.credential;
+        const payloadBase64 = jwtToken.split('.')[1];
+        const payload = JSON.parse(atob(payloadBase64));
+
+        return payload;
+    }
+
+    const credential = decodeJwtResponse(response);
+    console.log("email from credential is ", credential.email);
+
+    const user = await prisma.user.findUnique({
+        where: {
+            email: credential.email,
+        },
+    });
+
+    if (!user) {
+        await prisma.user.create({
+            data: {
+                email: credential.email,
+            },
+        });
+        console.log("new User comes in");
+
+        res.status(201).end();
+
+    } else {
+        const session = await prisma.session.create({
+            data: {
+                userId: user.id,
+                expires: new Date(),
+            },
+        });
+        // Save the session ID and send the response
+        res.status(201).json({ sessionToken: session.sessionToken });
+    }
+});
+
+
 ///SIGN IN
 app.get('/signin', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'src', 'components', 'signin.html'));
 });
+
 // Define a route for sign-in
 app.post('/signin', (req: Request, res: Response) => {
 
@@ -121,7 +169,7 @@ app.post('/users', async (req: PostUserRequest, res: PostUserResponse) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     // Create user
-    await prisma.user.create({
+    const createdUser = await prisma.user.create({
         data: {
             email: req.body.email,
             password: hashedPassword,
@@ -129,7 +177,7 @@ app.post('/users', async (req: PostUserRequest, res: PostUserResponse) => {
     });
 
     // Return user
-    res.status(201).end();
+    res.status(201).json(createdUser);
 });
 
             //Sessions//
@@ -171,6 +219,7 @@ app.post('/sessions', async (req: PostSessionRequest, res: PostSessionResponse) 
         sessionToken: session.sessionToken
     })
 })
+
 
 // Add authorization middleware
 const authorizeRequest = async (req: IRequestWithSession, res: Response, next: NextFunction) => {
@@ -216,6 +265,8 @@ const authorizeRequest = async (req: IRequestWithSession, res: Response, next: N
 
     next()
 }
+
+
 app.delete('/sessions', authorizeRequest, async (req: IRequestWithSession, res:DeleteSessionResponse) => {
     try {
         // Delete session
@@ -265,7 +316,7 @@ app.post('/items', authorizeRequest, async (req: IRequestWithSession, res: Respo
             },
         });
 
-        res.status(201).json("newItem");
+        res.status(201).json("new Item");
 
         expressWs.getWss().clients.forEach((client: any) => client.send(JSON.stringify({
             type: 'create',
