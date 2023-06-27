@@ -122,11 +122,10 @@ let filteredLogs = logEntries
     .filter(log => log !== null); // Filter out any entries that couldn't be parsed
 
 fs.watch(filePath, handleFileChange);
-
-
-function sendLogsToClients(logs: any[]): void {
+function sendLogsToClients(logs: any[]) {
     const payload = JSON.stringify(logs);
-    expressWs.getWss().clients.forEach((client: WebSocket) => {
+    let wss = new WebSocket.Server({ server: httpsServer });
+    wss.clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(payload);
         }
@@ -149,6 +148,7 @@ app.get('/logs', (req: Request, res: Response) => {
 
 // Add the request logger middleware
 app.use(express.json()); // Make sure to add this line before the request logger middleware
+//app.use(requestLogger);
 
 ///TODOS
 app.get('/todos', (req: Request, res: Response) => {

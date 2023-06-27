@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 import * as https from 'https';
 import * as fs from 'fs';
-import WebSocket from 'ws';
 
 let httpsServer = https
     .createServer(
@@ -18,7 +17,7 @@ let httpsServer = https
 
     //
     .listen(8080, () => {
-        console.log(`Server running at https://localhost:8080. Documentation at https://localhost:8080/docs`)
+        console.log("Server is running at port 8080 ");
     });
 const expressWs = require('express-ws')(app, httpsServer);
 
@@ -68,9 +67,9 @@ export interface PostSessionResponse extends Response {
     isGoogleUser: boolean;
 
 }
-import logger from './logger';
-app.set('view engine', 'ejs');
 
+<<<<<<< HEAD
+=======
 function getActionFromMethod(method: string): string {
     switch (method) {
         case 'GET':
@@ -149,6 +148,7 @@ app.get('/logs', (req: Request, res: Response) => {
 
 // Add the request logger middleware
 app.use(express.json()); // Make sure to add this line before the request logger middleware
+>>>>>>> 6c13ca0 (ws fixing)
 
 ///TODOS
 app.get('/todos', (req: Request, res: Response) => {
