@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 import * as https from 'https';
 import * as fs from 'fs';
+import WebSocket from 'ws';
 
 let httpsServer = https
     .createServer(
@@ -17,7 +18,7 @@ let httpsServer = https
 
     //
     .listen(8080, () => {
-        console.log("Server is running at port 8080 ");
+        console.log(`Server running at https://localhost:8080. Documentation at https://localhost:8080/docs`)
     });
 const expressWs = require('express-ws')(app, httpsServer);
 
@@ -67,7 +68,87 @@ export interface PostSessionResponse extends Response {
     isGoogleUser: boolean;
 
 }
+import logger from './logger';
+app.set('view engine', 'ejs');
 
+function getActionFromMethod(method: string): string {
+    switch (method) {
+        case 'GET':
+            return 'fetching';
+        case 'POST':
+            return 'creating';
+        case 'PUT':
+            return 'modifying';
+        case 'DELETE':
+            return 'deleting';
+        default:
+            return 'performing';
+    }
+}
+
+// Middleware to log requests
+app.use((req: Request, res: Response, next: NextFunction) => {
+    const { method, body } = req;
+    const action = getActionFromMethod(method); // Define a function to map HTTP methods to actions
+    const message = `${action}`;
+    logger.info(message, { body: JSON.stringify(body.description) });
+    next();
+});
+
+const filePath = path.join(__dirname, 'file.log');
+
+// Function to parse the log data into log objects
+function parseLogs(data: any) {
+    const logLines = data.split('\n');
+    const filteredLines = logLines.filter((line: any) => line.trim().length > 0);
+    return filteredLines.map((line: any) => JSON.parse(line));
+}
+
+//const logEntries = fs.readFileSync(filePath, 'utf-8').split('\n');
+const logEntries = fs.readFileSync(filePath, 'utf-8')
+    .split(/\r?\n/)
+    .map(entry => entry.trim())
+    .filter(entry => entry !== "");
+
+let filteredLogs = logEntries
+    .map(entry => {
+        try {
+            return JSON.parse(entry);
+        } catch (error) {
+            console.error('Error parsing log entry:', entry);
+            return null;
+        }
+    })
+    .filter(log => log !== null); // Filter out any entries that couldn't be parsed
+
+fs.watch(filePath, handleFileChange);
+function sendLogsToClients(logs: any[]) {
+    const payload = JSON.stringify(logs);
+    let wss = new WebSocket.Server({ server: httpsServer });
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(payload);
+        }
+    });
+}
+
+function handleFileChange() {
+    // Read the updated log file
+    const updatedLogs = fs.readFileSync(filePath, 'utf-8');
+    const parsedLogs = parseLogs(updatedLogs);
+    filteredLogs = parsedLogs;
+
+    // Send the updated logs to all connected clients
+    sendLogsToClients(parsedLogs);
+}
+
+app.get('/logs', (req: Request, res: Response) => {
+    res.render('home', { logs: filteredLogs });
+});
+
+// Add the request logger middleware
+app.use(express.json()); // Make sure to add this line before the request logger middleware
+//app.use(requestLogger);
 
 ///TODOS
 app.get('/todos', (req: Request, res: Response) => {
