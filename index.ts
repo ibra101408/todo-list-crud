@@ -123,7 +123,6 @@ let filteredLogs = logEntries
 
 fs.watch(filePath, handleFileChange);
 
-
 function sendLogsToClients(logs: any[]) {
     const payload = JSON.stringify(logs);
     expressWs.getWss().clients.forEach((client: WebSocket) => {
@@ -131,7 +130,6 @@ function sendLogsToClients(logs: any[]) {
             client.send(payload);
         }
     })
-}
 
 function handleFileChange() {
     // Read the updated log file
