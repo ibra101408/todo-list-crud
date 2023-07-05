@@ -124,13 +124,13 @@ let filteredLogs = logEntries
 fs.watch(filePath, handleFileChange);
 
 
-function sendLogsToClients(logs: any[]): void {
+function sendLogsToClients(logs: any[]) {
     const payload = JSON.stringify(logs);
     expressWs.getWss().clients.forEach((client: WebSocket) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(payload);
         }
-    });
+    })
 }
 
 function handleFileChange() {

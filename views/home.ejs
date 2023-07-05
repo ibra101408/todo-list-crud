@@ -1,0 +1,34 @@
+<html>
+<head>
+    <title>log file</title>
+
+</head>
+<body>
+
+<h1>Logs</h1>
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+    <tr style="background-color: #f2f2f2;">
+        <th style="padding: 8px; border: 1px solid #ddd;">Level</th>
+        <th style="padding: 8px; border: 1px solid #ddd;">Message</th>
+        <th style="padding: 8px; border: 1px solid #ddd;">Timestamp</th>
+        <th style="padding: 8px; border: 1px solid #ddd;">Body</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% for (let i = 0; i < logs.length; i++) { %>
+        <tr style="background-color: <%= i % 2 === 0 ? '#f9f9f9' : '#fff' %>;">
+            <td style="padding: 8px; border: 1px solid #ddd;"><%= logs[i].level %></td>
+            <td style="padding: 8px; border: 1px solid #ddd;"><%= logs[i].message %></td>
+            <td style="padding: 8px; border: 1px solid #ddd;"><%= logs[i].timestamp %></td>
+            <td style="padding: 8px; border: 1px solid #ddd;"><%= logs[i].body %></td>
+        </tr>
+    <% } %>
+    </tbody>
+</table>
+
+</body>
+<script>
+
+</script>
+</html>
