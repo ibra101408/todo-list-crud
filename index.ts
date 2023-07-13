@@ -22,7 +22,7 @@ let httpsServer = https
     });
 const expressWs = require('express-ws')(app, httpsServer);
 
-    app.ws('/', function () {
+app.ws('/', function () {
 
 });
 
@@ -123,13 +123,15 @@ let filteredLogs = logEntries
 
 fs.watch(filePath, handleFileChange);
 
-function sendLogsToClients(logs: any[]) {
+
+function sendLogsToClients(logs: any[]): void {
     const payload = JSON.stringify(logs);
     expressWs.getWss().clients.forEach((client: WebSocket) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(payload);
         }
-    })
+    });
+}
 
 function handleFileChange() {
     // Read the updated log file

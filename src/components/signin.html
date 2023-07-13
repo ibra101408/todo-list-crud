@@ -39,13 +39,13 @@
             <form>
                 <div class="mb-3">
                     <label for="signin-email" class="form-label">Email address</label>
-                    <input type="email" v-model="signInEmail" class="form-control" id="signin-email" aria-describedby="emailHelp">
+                    <input type="email" v-model="signInEmail" class="form-control" id="signin-email" data-cy="signin-email" aria-describedby="emailHelp">
                 </div>
                 <div class="mb-3">
                     <label for="signin-password" class="form-label">Password</label>
-                    <input type="password" v-model="signInPassword" class="form-control" id="signin-password">
+                    <input type="password" v-model="signInPassword" class="form-control" id="signin-password" data-cy="signin-password" >
                 </div>
-                <button id="signin-submit" type="button" class="btn btn-primary" @click="submitSignInForm">Sign In</button>
+                <button id="signin-submit" type="button" class="btn btn-primary" @click="submitSignInForm" data-cy="submit">Sign In</button>
 
             </form>
 

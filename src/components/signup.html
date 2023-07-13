@@ -36,14 +36,14 @@
             <form>
                 <div class="mb-3">
                     <label for="signup-email" class="form-label">Email address</label>
-                    <input type="email" v-model="signUpEmail" class="form-control" id="signup-email" aria-describedby="emailHelp">
+                    <input type="email" v-model="signUpEmail" class="form-control" id="signup-email" data-cy="signup-email" aria-describedby="emailHelp">
                     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                 </div>
                 <div class="mb-3">
                     <label for="signup-password" class="form-label">Password</label>
-                    <input type="password" v-model="signUpPassword" class="form-control" id="signup-password">
+                    <input type="password" v-model="signUpPassword" class="form-control" id="signup-password" data-cy="signup-password">
                 </div>
-                <button id="signup-submit" type="button" class="btn btn-primary" @click="submitSignUpForm">Sign Up</button>
+                <button id="signup-submit" type="button" class="btn btn-primary" @click="submitSignUpForm" data-cy="signup-submit">Sign Up</button>
             </form>
         </div>
         <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>

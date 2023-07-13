@@ -32,7 +32,7 @@
     <div id="app" class="container mt-5">
         <h1 class="todos">Todos</h1>
 
-        <button type="button" id="signout-submit" class="btn btn-success" @click="signOut">
+        <button type="button" id="signout-submit" class="btn btn-success" @click="signOut" data-cy="signout-submit">
             Sign Out
         </button>
 
@@ -49,17 +49,17 @@
                         <div>
                             <h4 class="card-title">Awesome Todo list</h4>
                             <div class="list-wrapper">
-                                <ul class="d-flex flex-column-reverse todo-list">
+                                <ul class="d-flex flex-column-reverse todo-list" data-cy="list">
                                     <!--TEST-->
                                     <li v-for="item in items">
                                         <div class="form-check">
                                             <label class="form-check-label" :class="{ 'completed': item.completed }">
                                                 <button class="btn btn-sm btn-success" @click="completeItem(item)" data-cy="complete-btn">Completed</button>
-                                                <span v-if="!item.editing" class="task-description" :class="{ 'completed': item.completed }">{{ item.description }}</span>
+                                                <span v-if="!item.editing" data-cy="is-completed" class="task-description" :class="{ 'completed': item.completed }">{{ item.description }}</span>
                                                 <input v-if="item.editing" type="text" v-model="item.updatedDescription" class="form-control" @keyup.enter="updateItem(item)">
                                             </label>
                                         </div>
-                                        <button class="btn btn-danger btn-sm" @click="confirmDelete(item)">
+                                        <button class="btn btn-danger btn-sm" @click="confirmDelete(item)" data-cy="delete-button">
                                             <i class="fa fa-trash"></i> Delete
                                         </button>
                                         <button class="btn btn-secondary btn-sm edit-button" @click="showEditInput(item)" data-cy="edit-button">
@@ -203,18 +203,6 @@
                             this.items = this.items.filter(i => i.id !== item.id);
                             // console.log
                             // updateUI(this.items);
-                        },
-
-                        // Listen for messages from the WebSocket server
-                        listenForMessages: function () {
-                            connection.onmessage = (event) => {
-                                const data = JSON.parse(event.data);
-                                console.log(data)
-                                if (data.type === 'delete') {
-                                    this.items = this.items.filter(i => i.id !== data.id);
-                                    //  updateUI(this.items);
-                                }
-                            }
                         },
 
                         deleteItem: async function (item) {
