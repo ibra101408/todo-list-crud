@@ -155,8 +155,6 @@ app.get('/todos', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'src', 'components', 'todos.html'));
 });
 
-app.post('/todos', (req: Request, res: Response) => {
-});
 
 
 //GOOGLE
@@ -226,8 +224,6 @@ app.get('/signup', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'src', 'components', 'signup.html'));
 });
 
-app.post('/signup', (req: Request, res: Response) => {
-});
 
 app.post('/users', async (req: PostUserRequest, res: PostUserResponse) => {
     // Validate email and password
@@ -501,3 +497,8 @@ app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res:
     }
 });
 
+/*
+* POS_T:5
+* GE_T: 5
+* delete: 2
+* put: 1*/

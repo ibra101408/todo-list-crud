@@ -9,6 +9,8 @@ Given('I am on a logged in user', () => {
 });
 
 When('I click the "Completed" button of a task', () => {
+    cy.intercept('PUT', '/items/*').as('complete-todo'); // Use cy.route instead of cy.intercept
+
     cy.get('[data-cy="complete-btn"]').then($buttons => {
         // Generate a random index within the range of available buttons
         let randomIndex = Cypress._.random(0, $buttons.length - 1);
@@ -19,6 +21,7 @@ When('I click the "Completed" button of a task', () => {
         // Store the random index in a Cypress custom alias
         cy.wrap(randomIndex).as('randomIndex');
     });
+    cy.wait('@complete-todo');
 });
 
 Then('the task should be marked as complete', () => {

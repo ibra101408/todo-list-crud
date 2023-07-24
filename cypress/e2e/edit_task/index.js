@@ -7,7 +7,10 @@ Given('I am on a logged in user', () => {
         cy.visit('https://localhost:8080/todos');
     });
 });
+
 When('I click the "Edit" button of the task', () => {
+    cy.intercept('PUT', '/items/*').as('edit-todo'); // Use cy.route instead of cy.intercept
+
     cy.get('[data-cy="edit-button"]').then($editButtons => {
         const randomIndex = Math.floor(Math.random() * $editButtons.length);
         const randomEditButton = $editButtons.eq(randomIndex);
@@ -22,6 +25,7 @@ And('I update the task description', () => {
 
 And('I click on the "Save" button', () => {
     cy.get('[data-cy="update-button"]').click();
+    cy.wait('@edit-todo');
 });
 
 Then('the task should be updated with the new description', () => {

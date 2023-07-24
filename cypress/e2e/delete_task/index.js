@@ -7,10 +7,15 @@ Given('I am on a logged in user', () => {
         cy.createUser(testUser);
         cy.signIn(testUser);
         cy.visit('https://localhost:8080/todos');
+        // Wait for the WebSocket connection to be stable
+        cy.wait(500); // Adjust the time as needed
+
     });
 });
 
 When('I click the "Delete" button', () => {
+    cy.intercept('DELETE', '/items/*').as('delete-todo')
+
     cy.get('ul[data-cy=list]').within(() => {
         // Get all li elements
         cy.get('li').then($lis => {
@@ -24,6 +29,8 @@ When('I click the "Delete" button', () => {
             $randomLi.find('button[data-cy=delete-button]').click();
         });
     });
+
+    cy.wait('@delete-todo')
 });
 
 Then('the task should no longer be visible on the list', () => {

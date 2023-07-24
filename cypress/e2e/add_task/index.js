@@ -11,12 +11,14 @@ Given('I am on a logged in user', () => {
 });
 
 When ('I typing new task', () => {
-    cy.get("input[data-cy=add-item-input]").type(randTask);
+    cy.intercept('POST', '/items').as('new-todo')
+    cy.get('input[data-cy=add-item-input]').type(randTask)
 })
 
 And ('I submit the task form', () => {
     cy.get("button[data-cy=add-item-button]").click();
-})
+    cy.wait('@new-todo')
+});
 
 Then('the new task should be visible on the application page', () => {
     cy.contains(randTask).should('exist');

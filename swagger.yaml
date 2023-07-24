@@ -31,13 +31,48 @@ paths:
         '409':
           content:
             text/html:
-              examples:
+                examples:
                 Email already exists:
                   value: Email already exists
           description: Conflict
       operationId: createUser
-      summary: Create a User
+      summary: Create a User!
       description: Creates a new instance of a `User`.
+  /signin:
+    get:
+      summary: Get the sign-in page
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Sign in
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        '401':
+          description: Unauthorized
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                ###end test
   /sessions:
     summary: Path used to manage the list of sessions.
     description: >-
@@ -91,6 +126,27 @@ paths:
         - Bearer: []
       summary: Destroy a Session
       description: Deletes a `Session`.
+
+  /logs:
+    get:
+      summary: Get logs
+      responses:
+        200:
+          description: Log entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timestamp:
+                      type: string
+                      format: date-time
+                    level:
+                      type: string
+                    message:
+                      type: string
   /items:
     get:
       tags:
