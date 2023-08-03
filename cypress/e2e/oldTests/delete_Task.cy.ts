@@ -9,7 +9,7 @@ describe('deleteTask', () => {
             cy.get('#signin-password').click();
             cy.get('#signin-password').type('1234');
             cy.get('#signin-submit').click();
-            cy.url().should('contains', 'https://localhost:8080/todos');
+            cy.url().should('contains', 'https://localhost:8080/todos.html');
             // Check if the text "delete me" exists and delete the item
             cy.contains('.list-wrapper li', 'delete me', { matchCase: false })
                 .then(($item) => {

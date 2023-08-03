@@ -10,7 +10,7 @@ describe('editTask', () => {
         cy.get('#signin-password').click();
         cy.get('#signin-password').type('1234');
         cy.get('#signin-submit').click();
-        cy.url().should('contains', 'https://localhost:8080/todos');
+        cy.url().should('contains', 'https://localhost:8080/todos.html');
         // Locate the task containing the text "hello, world"
         //cy.get('.edit-button');
         cy.contains('.task-description', "existing_user's Task", { matchCase: false })

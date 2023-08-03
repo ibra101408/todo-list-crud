@@ -16,10 +16,10 @@ let httpsServer = https
         app
     )
 
-    //
     .listen(8080, () => {
         console.log(`Server running at https://localhost:8080. Documentation at https://localhost:8080/docs`)
     });
+
 const expressWs = require('express-ws')(app, httpsServer);
 
 app.ws('/', function () {
@@ -52,22 +52,20 @@ export interface PostUserRequest extends Request {
     password: string
 }
 
-interface PostUserResponse extends Response {
-}
+interface PostUserResponse extends Response {}
 
 export interface PostSessionRequest extends Request {
     email: string,
     password: string
 }
 
-export interface DeleteSessionResponse extends Response {
-}
+export interface DeleteSessionResponse extends Response {}
 
 export interface PostSessionResponse extends Response {
     sessionToken: string;
     isGoogleUser: boolean;
-
 }
+
 import logger from './logger';
 app.set('view engine', 'ejs');
 
@@ -123,7 +121,6 @@ let filteredLogs = logEntries
 
 fs.watch(filePath, handleFileChange);
 
-
 function sendLogsToClients(logs: any[]): void {
     const payload = JSON.stringify(logs);
     expressWs.getWss().clients.forEach((client: WebSocket) => {
@@ -144,18 +141,11 @@ function handleFileChange() {
 }
 
 app.get('/logs', (req: Request, res: Response) => {
-    res.render('home', { logs: filteredLogs });
+    res.json(filteredLogs);
 });
 
 // Add the request logger middleware
-app.use(express.json()); // Make sure to add this line before the request logger middleware
-
-///TODOS
-app.get('/todos', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, 'src', 'components', 'todos.html'));
-});
-
-
+app.use(express.json());
 
 //GOOGLE
 app.post('/auth/google', async (req: PostUserRequest, res: PostUserResponse) => {
@@ -171,7 +161,6 @@ app.post('/auth/google', async (req: PostUserRequest, res: PostUserResponse) => 
     }
 
     const credential = decodeJwtResponse(response);
-    console.log("email from credential is ", credential.email);
 
     const user = await prisma.user.findUnique({
         where: {
@@ -201,30 +190,6 @@ app.post('/auth/google', async (req: PostUserRequest, res: PostUserResponse) => 
     }
 });
 
-
-///SIGN IN
-app.get('/signin', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, 'src', 'components', 'signin.html'));
-});
-
-// Define a route for sign-in
-app.post('/signin', (req: Request, res: Response) => {
-
-    const { email, password } = req.body;
-
-    if (email === 'user' && password === 'user') {
-        res.status(200).json({ message: 'Sign in successful' });
-    } else {
-        res.status(401).json({ error: 'Invalid email or password' });
-    }
-});
-
-////SIGN UP
-app.get('/signup', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, 'src', 'components', 'signup.html'));
-});
-
-
 app.post('/users', async (req: PostUserRequest, res: PostUserResponse) => {
     // Validate email and password
     if (!req.body.email || !req.body.password) {
@@ -239,7 +204,7 @@ app.post('/users', async (req: PostUserRequest, res: PostUserResponse) => {
     });
 
     if (userExists) {
-        return res.status(409).json({ error: 'Email already exists' });
+        return res.status(409).json('Email already exists' );
     }
 
     // Hash password
@@ -254,10 +219,9 @@ app.post('/users', async (req: PostUserRequest, res: PostUserResponse) => {
     });
 
     // Return user
-    res.status(201).json(createdUser);
+    res.status(201).end();
 });
 
-            //Sessions//
 app.post('/sessions', async (req: PostSessionRequest, res: PostSessionResponse) => {
 
     // Validate email and password
@@ -452,8 +416,13 @@ app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Re
                     completed: updatedItem.completed,
                 }))
         );
+        const response = {
+            id: updatedItem.id,
+            description: updatedItem.description,
+            completed: updatedItem.completed
+        };
 
-        res.status(200).json(updatedItem);
+        res.status(200).send(response);
     }
 
     catch (error) {
@@ -488,17 +457,10 @@ app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res:
                     id: deletedItem.id
             }))
        );
-
-        res.status(201).json(item);
+        return res.status(204).send();
     }
 
     catch (error) {
         res.status(500).send((error as Error).message || 'Something went wrong')
     }
 });
-
-/*
-* POS_T:5
-* GE_T: 5
-* delete: 2
-* put: 1*/

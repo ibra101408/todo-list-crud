@@ -3,6 +3,59 @@ info:
   title: Todo
   version: 1.0.0
 paths:
+  /auth/google:
+
+    post:
+      summary: Authenticate with Google
+      tags:
+        - Authentication
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                credential:
+                  type: string
+                  description: JWT from Google Auth
+                  example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkxMWUzOWUyNzkyOGFlOWYxZTlkMWUyMTY0NmRlOTJkMTkzNTFiNDQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2MTgyMDgxNzk0NzYtbjFyZG1zdWpyamVpZHYzdXFxZ2FqNWwwcnJ0Z2VmZzguYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI2MTgyMDgxNzk0NzYtbjFyZG1zdWpyamVpZHYzdXFxZ2FqNWwwcnJ0Z2VmZzguYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDYwMDEwMDE5NjQ1NTYxNjMwMTMiLCJoZCI6InZvY28uZWUiLCJlbWFpbCI6ImRhbmlpbC52b2RlbmVqZXZAdm9jby5lZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYmYiOjE2OTEwNjQzMzMsIm5hbWUiOiJEYW5paWwgVm9kZW5lamV2IiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBY0hUdGMyUmVCX3NzeHVKNE9Kdk5nT1VHNi1JUkIwX04zNzBISzBGc1JBQVNrVz1zOTYtYyIsImdpdmVuX25hbWUiOiJEYW5paWwiLCJmYW1pbHlfbmFtZSI6IlZvZGVuZWpldiIsImxvY2FsZSI6ImVuLUdCIiwiaWF0IjoxNjkxMDY0NjMzLCJleHAiOjE2OTEwNjgyMzMsImp0aSI6IjUxZjcwMzk2MTllZjA2OWQ2YTc4MWQ3NmNiMzkzNWM3MjE3MjM1NGUifQ.X6NaKpdhzOzmlsw9fRfE19NyhoPaa5u6NtDsN4j2mC3WrzUXrJHQPmBFawmwQgKX8yZoih8SpSCLP8KjnsMBfOjU3NMUJT42QIuIR4YfSWnZmyjwrPcLrXJlivSwWGnIWSJKPr14y-1kgfUbQwVv8BuycL7bAIqTl3egN4r0GtNl5slp0QyOwL9hzJJA2zJrF0q5hfB-jkG7FPgpAGL4NXuk_ExZ7dLF27eeAKQu_v9FG6faz3RZmJ5BGw8obhqddVAMcwdLNugHfa3POkw5Zw-AaTpboQn6HZk7Ys5996zgR8M9m7Qj4RWfhUAtN2-prOVkQRS6jdGT5upcFqWkbA"
+
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+              examples:
+                SessionId:
+                  value:
+                    sessionToken: 66ca23ac-dc0e-4e9c-9b3b-c07b736d89c9
+          description: Send sessionId
+        401:
+          description: Unauthorized
+      security:
+        - GoogleAuth: [ ]
+  components:
+    schemas:
+      GoogleToken:
+        type: object
+        properties:
+          credential:
+            type: string
+            description: JWT from Google Auth
+
+    securityDefinitions:
+      GoogleAuth:
+        type: oauth2
+        authorizationUrl: https://accounts.google.com/o/oauth2/v2/auth
+        flow: implicit
+        scopes:
+          - https://www.googleapis.com/auth/userinfo.email
+          - https://www.googleapis.com/auth/userinfo.profile
+
+    security:
+      - GoogleAuth: [ ]
   /users:
     summary: Path used to manage the list of users.
     description: >-
@@ -34,107 +87,129 @@ paths:
                 examples:
                 Email already exists:
                   value: Email already exists
-          description: Conflict
+          description: Email already exists
       operationId: createUser
       summary: Create a User!
       description: Creates a new instance of a `User`.
-  /signin:
-    get:
-      summary: Get the sign-in page
-      responses:
-        '200':
-          description: OK
-    post:
-      summary: Sign in
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            type: object
-            properties:
-              email:
-                type: string
-              password:
-                type: string
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-        '401':
-          description: Unauthorized
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                ###end test
   /sessions:
-    summary: Path used to manage the list of sessions.
-    description: >-
-      The REST endpoint/path used to list and create zero or more `Session` entities. This path
-      contains a `GET` and `POST` operation to perform the list and create tasks, respectively.
     post:
       requestBody:
-        description: A new `Session` to be created.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Session'
+              $ref: '#/components/schemas/User'
+            examples:
+              PostSessionsRequestBody:
+                value:
+                  email: test@test.ee
+                  password: qwerty123
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              PostSessionRequestBody:
+                value: |-
+                  <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+                  <root>
+                      <email>test@test.ee</email>
+                      <password>qwerty123</password>
+                  </root>
         required: true
       tags:
-        - /sessions
+        - Sessions
       responses:
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Session'
-          description: Successful response.
+              examples:
+                SessionId:
+                  value:
+                    sessionToken: 66ca23ac-dc0e-4e9c-9b3b-c07b736d89c9
+          description: Send sessionId
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Bad Request Error:
+                  value:
+                    error: Bad Request Error
+          description: Bad Request
         '401':
           content:
-            text/html:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
               examples:
+                Session not found:
+                  value:
+                    error: Session not found
+                User not found:
+                  value:
+                    error: User not found
+                Email is required:
+                  value:
+                    error: Email is required
+                Password is required:
+                  value:
+                    error: Password is required
                 Invalid email or password:
-                  value: Invalid email or password
-          description: Unauthorized.
-      operationId: createSession
-      summary: Create a Session
-      description: Creates a new instance of a `Session`.
+                  value:
+                    error: Invalid email or password
+          description: Session not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    error: Internal Server Error
+          description: Internal Server Error
+      security:
+        - Bearer: [ ]
+      summary: Create a new session
     delete:
       tags:
-        - /sessions
+        - Sessions
       responses:
         '204':
-          description: Session destroyed.
-        '401':
+          description: SessionId deleted
+        '404':
           content:
-            text/html:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
               examples:
-                Authorization header required:
-                  value: Authorization header required
-                Invalid session token:
-                  value: Invalid session token
-                Invalid authorization header format:
-                  value: Invalid authorization header format
-          description: Unauthorized.
+                No session:
+                  value:
+                    error: No session found
+          description: No session found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                Internal Server Error:
+                  value:
+                    error: Internal Server Error
+          description: Internal Server Error
       security:
-        - Bearer: []
-      summary: Destroy a Session
-      description: Deletes a `Session`.
-
+        - Bearer: [ ]
+      summary: Delete a session
   /logs:
     get:
       summary: Get logs
       responses:
-        200:
+        '200':
           description: Log entries
           content:
-            application/json:
+            application/json: # Change content type to JSON
               schema:
                 type: array
                 items:
@@ -155,13 +230,20 @@ paths:
         '200':
           content:
             application/json:
-              examples:
-                '[{ "id": 1, "description": "s", "userId": 1}]':
-                  value:
-                    - id: 1
-                      description: s
-                      userId: 1
+              schema:
+                $ref: '#/components/schemas/getItems'
           description: List of user items.
+        '401':
+          content:
+            text/html:
+              examples:
+                Authorization header required:
+                  value: Authorization header required
+                Invalid session token:
+                  value: Invalid session token
+                Invalid authorization header format:
+                  value: Invalid authorization header format
+          description: The client making the request lacks valid authentication credentials for the target resource.
       deprecated: false
       security:
         - Bearer: []
@@ -182,9 +264,7 @@ paths:
               examples:
                 Add item:
                   value:
-                    id: 1
                     description: s
-                    userId: 1
           description: Item added
         '400':
           content:
@@ -198,7 +278,7 @@ paths:
             text/html:
               examples:
                 Authorization header required:
-                  value: Authorization header required
+                  value: Authorization header required!!
                 Invalid session token:
                   value: Invalid session token
                 Invalid authorization header format:
@@ -206,13 +286,67 @@ paths:
           description: The client making the request lacks valid authentication credentials for the target resource.
       security:
         - Bearer: []
-  '/items/{id}':
+  /items/{id}:
+    put:
+      summary: Update item
+      tags:
+        - items
+      security:
+        - Bearer: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                completed:
+                  type: boolean
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdItem'
+        '401':
+          content:
+            text/html:
+              examples:
+                Authorization header required:
+                  value: Authorization header required
+                Invalid session token:
+                  value: Invalid session token
+                Invalid authorization header format:
+                  value: Invalid authorization header format
+          description: The client making the request lacks valid authentication credentials for the target resource.
+        404:
+          description: Item not found
+        500:
+          description: Error updating item
+    components:
+    schemas:
+      Item:
+        type: object
+        properties:
+          id:
+            type: integer
+          description:
+            type: string
+          completed:
+            type: boolean
     delete:
       tags:
         - /items
       responses:
         '204':
-          description: Item successfully deleted
+          description: No Content
         '401':
           content:
             text/html:
@@ -265,18 +399,49 @@ components:
       description: ''
       type: object
       properties:
+        description:
+          type: string
+      example:
+        description: new todo
+    getItems:
+      title: Get all items
+      description: ''
+      type: object
+      properties:
         id:
-          format: int32
-          type: integer
+          type: ineteger
         description:
           type: string
         userId:
-          format: int32
           type: integer
+        completed:
+          type: boolean
       example:
         id: 1
-        description: s
-        userId: 1
+        description: todo
+        userId: 2
+        completed: false
+    UpdItem:
+      title: Root Type for Item
+      description: ''
+      type: object
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+        completed:
+          type: boolean
+      example:
+        id: 1
+        description: new todo
+        completed: false
+    Error:
+      description: |-
+        {
+            "error:" "Error message"
+        }
+      type: object
   securitySchemes:
     Bearer:
       scheme: bearer
@@ -284,5 +449,3 @@ components:
 tags:
   - name: /users
     description: Create users.
-  - name: /sessions
-    description: Sign in and Sign out.

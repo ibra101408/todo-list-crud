@@ -4,7 +4,7 @@ Given('I am on a logged in user', () => {
     cy.fixture('testUser').then(testUser => {
         cy.createUser(testUser);
         cy.signIn(testUser);
-        cy.visit('https://localhost:8080/todos');
+        cy.visit('https://localhost:8080/todos.html');
     });
 });
 

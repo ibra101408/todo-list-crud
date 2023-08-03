@@ -10,7 +10,7 @@ describe('addTask', () => {
         cy.get('#signin-password').click();
         cy.get('#signin-password').type('1234');
         cy.get('#signin-submit').click();
-        cy.url().should('contains', 'https://localhost:8080/todos');
+        cy.url().should('contains', 'https://localhost:8080/todos.html');
         cy.get('[data-cy=add-item-input]').click();
         cy.get('[data-cy=add-item-input]').type("existing_user's Task" );
         cy.get('[data-cy=add-item-button]').click();
@@ -22,7 +22,7 @@ describe('addTask', () => {
         cy.get('#signin-password').click();
         cy.get('#signin-password').type('root');
         cy.get('#signin-submit').click();
-        cy.url().should('contains', 'https://localhost:8080/todos');
+        cy.url().should('contains', 'https://localhost:8080/todos.html');
         cy.get('.todo-list li').should('not.contain', "existing_user's Task");
 
     });

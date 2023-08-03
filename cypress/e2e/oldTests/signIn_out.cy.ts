@@ -10,7 +10,7 @@ describe('Signin', () => {
         cy.get('#signin-password').click();
         cy.get('#signin-password').type('1234');
         cy.get('#signin-submit').click();
-        cy.url().should('contains', 'https://localhost:8080/todos');
+        cy.url().should('contains', 'https://localhost:8080/todos.html');
         cy.get('#signout-submit').click();
         cy.url().should('contains', 'https://localhost:8080/');
 

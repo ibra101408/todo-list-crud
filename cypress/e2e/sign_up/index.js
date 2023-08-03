@@ -6,7 +6,7 @@ const randomEmail = Math.random().toString(36).substring(2) + '@example.com'
 const randomPassword = Math.random().toString(36).substring(2)
 
 Given('I am on the signup page', () => {
-    cy.visit('https://localhost:8080/signup')
+    cy.visit('https://localhost:8080/signup.html')
 })
 
 When('I enter a new username and a new password and click on the signup button', () => {
@@ -16,7 +16,7 @@ When('I enter a new username and a new password and click on the signup button',
 })
 
 And('I should see the signin page', () => {
-    cy.url().should('contains', 'https://localhost:8080/signin');
+    cy.url().should('contains', 'https://localhost:8080/signin.html');
 })
 When('I enter the username and the password and click on the signin button', () => {
     cy.get('input[data-cy=signin-email]').type(randomEmail);
@@ -25,5 +25,5 @@ When('I enter the username and the password and click on the signin button', () 
 })
 
 Then('I should see the application page', () => {
-    cy.url().should('contains', 'https://localhost:8080/todos');
+    cy.url().should('contains', 'https://localhost:8080/todos.html');
 })

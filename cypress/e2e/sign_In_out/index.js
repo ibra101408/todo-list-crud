@@ -3,7 +3,7 @@ import { Given, When, Then, And } from "cypress-cucumber-preprocessor/steps";
 let testUser = {email: 'test@gmail.com', password: 'test'}
 
 Given('I am on the login page', () => {
-    cy.visit('https://localhost:8080/signin')
+    cy.visit('https://localhost:8080/signin.html')
 })
 
 When('I enter username and password', () => {
@@ -24,7 +24,7 @@ When('I enter username and password', () => {
 })
 
 And('I should see the application page', () => {
-    cy.url().should('contains', 'https://localhost:8080/todos');
+    cy.url().should('contains', 'https://localhost:8080/todos.html');
 })
 
 When('I click on the logout link', () => {
