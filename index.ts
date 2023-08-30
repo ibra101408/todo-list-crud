@@ -4,6 +4,8 @@ const app = express();
 import * as https from 'https';
 import * as fs from 'fs';
 import WebSocket from 'ws';
+const xml2js = require('xml2js');
+const parser = new xml2js.Parser();
 
 let httpsServer = https
     .createServer(
@@ -37,6 +39,10 @@ import * as yamljs from 'yamljs';
 import * as path from "path";
 import * as bcrypt from 'bcrypt'
 import { IRequestWithSession } from './custom'
+import xmlparser from 'express-xml-bodyparser';
+
+//app.use(xmlparser());
+app.use(xmlparser({ explicitArray: false }));
 
 app.use(express.json());
 
@@ -69,27 +75,9 @@ export interface PostSessionResponse extends Response {
 import logger from './logger';
 app.set('view engine', 'ejs');
 
-function getActionFromMethod(method: string): string {
-    switch (method) {
-        case 'GET':
-            return 'fetching';
-        case 'POST':
-            return 'creating';
-        case 'PUT':
-            return 'modifying';
-        case 'DELETE':
-            return 'deleting';
-        default:
-            return 'performing';
-    }
-}
-
 // Middleware to log requests
 app.use((req: Request, res: Response, next: NextFunction) => {
-    const { method, body } = req;
-    const action = getActionFromMethod(method); // Define a function to map HTTP methods to actions
-    const message = `${action}`;
-    logger.info(message, { body: JSON.stringify(body.description) });
+
     next();
 });
 
@@ -188,38 +176,101 @@ app.post('/auth/google', async (req: PostUserRequest, res: PostUserResponse) => 
         // Save the session ID and send the response
         res.status(201).json({ sessionToken: session.sessionToken });
     }
+    logger.info(`User logged in via Google: ${credential.email}`);
+
 });
 
 app.post('/users', async (req: PostUserRequest, res: PostUserResponse) => {
-    // Validate email and password
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).send('Email and password required');
+
+    try {
+        if (req.headers['content-type'] === 'application/json') {
+            // If the Content-Type is JSON, directly access req.body as JSON object
+            const { email, password } = req.body;
+
+            // Validate email and password
+            if (!email || !password) {
+                return res.status(400).send('Email and password required');
+            }
+
+            // Validate that email is unique
+            const userExists = await prisma.user.findUnique({
+                where: {
+                    email: email,
+                },
+            });
+
+            if (userExists) {
+                return res.status(409).json('Email already exists');
+            }
+
+            // Hash password
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // Create user
+            const createdUser = await prisma.user.create({
+                data: {
+                    email: email,
+                    password: hashedPassword,
+                },
+            });
+            logger.info(`User created. Email: ${email}`);
+            // Return user
+            return res.status(201).end();
+        } else if (req.headers['content-type'] === 'application/xml') {
+            // If the Content-Type is XML, parse the XML data
+            parser.parseString(req.body.root, async (err: Error | null, result: any) => {
+                const email = req.body.root.email[0];
+                const password = req.body.root.password[0];
+                if (err) {
+                    console.log(Error);
+                    console.log(req.body);
+                    return res.status(400).send('Invalid XML format!');
+                }
+                const parser = new xml2js.Parser();
+
+                let jsonData;
+
+                parser.parseString(req.body, (err: Error, result: any) => {
+                    jsonData = result;
+                });
+
+                // Validate email and password
+                if (!email || !password) {
+                    return res.status(400).send('Email and password required');
+                }
+
+                // Validate that email is unique
+                const userExists = await prisma.user.findUnique({
+                    where: {
+                        email: email,
+                    },
+                });
+
+                if (userExists) {
+                    return res.status(409).json('Email already exists');
+                }
+
+                // Hash password
+                const hashedPassword = await bcrypt.hash(password, 10);
+
+                // Create user
+                const createdUser = await prisma.user.create({
+                    data: {
+                        email: email,
+                        password: hashedPassword,
+                    },
+                });
+
+                // Return user
+                return res.status(201).end();
+            });
+        } else {
+            return res.status(415).send('Unsupported Media Type');
+        }
+    } catch (error) {
+        res.status(500).json('Error!');
     }
 
-    // Validate that email is unique
-    const userExists = await prisma.user.findUnique({
-        where: {
-            email: req.body.email,
-        },
-    });
-
-    if (userExists) {
-        return res.status(409).json('Email already exists' );
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    // Create user
-    const createdUser = await prisma.user.create({
-        data: {
-            email: req.body.email,
-            password: hashedPassword,
-        },
-    });
-
-    // Return user
-    res.status(201).end();
 });
 
 app.post('/sessions', async (req: PostSessionRequest, res: PostSessionResponse) => {
@@ -259,6 +310,8 @@ app.post('/sessions', async (req: PostSessionRequest, res: PostSessionResponse) 
     res.status(201).json({
         sessionToken: session.sessionToken
     })
+    logger.info(`User logged in. User email: ${user.email}`);
+
 })
 
 
@@ -317,12 +370,13 @@ app.delete('/sessions', authorizeRequest, async (req: IRequestWithSession, res:D
             }
         });
 
-        // Return success response
+        // Return success response 942c2fb1-29dc-44b6-9c5b-c11a12434a9d
         res.status(204).end();
     } catch (error) {
         // Return error response
         res.status(500).json({ error: 'Failed to sign out' });
     }
+    logger.info(`Session deleted: ${req.sessionToken}`);
 });
 
 // Get items
@@ -357,25 +411,28 @@ app.post('/items', authorizeRequest, async (req: IRequestWithSession, res: Respo
             },
         });
 
-        res.status(201).json("new Item");
-
         expressWs.getWss().clients.forEach((client: any) => client.send(JSON.stringify({
             type: 'create',
             item: newItem
         })));
 
-        res.status(201).end();
+        const responseObj = {
+            description: newDescription
+        };
+        res.status(201).json(responseObj);
+
+//        res.status(201).end();
     }
 
     catch (error) {
         res.status(500).send((error as Error).message || 'Something went wrong')
     }
+    logger.info(`New item added: ${req.body.description}`);
 });
 
 app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
 
     try {
-        console.log(req.body)
         // Get id from req.params
         const { id } = req.params;
         const { description, completed } = req.body;
@@ -383,7 +440,7 @@ app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Re
 
 
         if (!description) {
-            return //res.status(400).send('Description required2 ');
+            return
         }
 
         const item = await prisma.item.findUnique({
@@ -406,7 +463,6 @@ app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Re
             },
 
         });
-
         expressWs.getWss().clients.forEach(
             (client: any) =>
                 client.send(JSON.stringify({
@@ -423,6 +479,8 @@ app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Re
         };
 
         res.status(200).send(response);
+        logger.info(`Item updated: ${req.body.description}, completed: ${String(req.body.completed)}`);
+
     }
 
     catch (error) {
@@ -457,10 +515,12 @@ app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res:
                     id: deletedItem.id
             }))
        );
+        logger.info(`Item deleted`);
         return res.status(204).send();
-    }
 
-    catch (error) {
+    }catch (error) {
         res.status(500).send((error as Error).message || 'Something went wrong')
     }
 });
+
+

@@ -33,7 +33,12 @@ paths:
                     sessionToken: 66ca23ac-dc0e-4e9c-9b3b-c07b736d89c9
           description: Send sessionId
         401:
-          description: Unauthorized
+          content:
+            text/html:
+              examples:
+                  Unauthorized:
+                    value: Unauthorized
+            description: Unauthorized
       security:
         - GoogleAuth: [ ]
   components:
@@ -85,8 +90,8 @@ paths:
           content:
             text/html:
                 examples:
-                Email already exists:
-                  value: Email already exists
+                  Email already exists:
+                    value: Email already exists
           description: Email already exists
       operationId: createUser
       summary: Create a User!
@@ -215,13 +220,13 @@ paths:
                 items:
                   type: object
                   properties:
-                    timestamp:
-                      type: string
-                      format: date-time
                     level:
                       type: string
                     message:
                       type: string
+                    timestamp:
+                      type: string
+                      format: date-time
   /items:
     get:
       tags:
@@ -264,7 +269,7 @@ paths:
               examples:
                 Add item:
                   value:
-                    description: s
+                    description: added Item
           description: Item added
         '400':
           content:
@@ -327,9 +332,19 @@ paths:
                   value: Invalid authorization header format
           description: The client making the request lacks valid authentication credentials for the target resource.
         404:
-          description: Item not found
+          content:
+            text/html:
+              examples:
+                Item not found:
+                  value: Item not found
+            description: Item not found
         500:
-          description: Error updating item
+          content:
+            text/html:
+              examples:
+                Error updating item:
+                  value: Error updating item
+            description: Error updating item
     components:
     schemas:
       Item:

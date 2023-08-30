@@ -10,7 +10,7 @@ const logger = winston.createLogger({
         winston.format.json()
     ),
     transports: [
-        new winston.transports.File({filename: 'file.log'}) // Set the desired path for your log file
+        new winston.transports.File({filename: 'file.log' }) // Set the desired path for your log file
     ]
 });
 

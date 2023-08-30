@@ -293,9 +293,7 @@
             };
 
             connection.onmessage = (e) => {
-                console.log('Received WebSocket message:', e.data);
                 const data = JSON.parse(e.data);
-                console.log('Parsed WebSocket data:', data);
                 if (data.type === 'create') {
                     // Check if item already exists in app.items
                     if (!app.items.some(item => item.id === data.item.id)) {
