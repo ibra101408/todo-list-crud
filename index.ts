@@ -31,8 +31,9 @@ app.ws('/', function () {
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-import * as dotenv from 'dotenv';
-dotenv.config();
+require('dotenv').config();
+
+//dotenv.config();
 
 import * as swaggerUi from 'swagger-ui-express';
 import * as yamljs from 'yamljs';
@@ -49,6 +50,10 @@ app.use(express.json());
 // Add Swagger
 const swaggerDocument = yamljs.load('./swagger.yaml');
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.get('/config', (req: Request, res: Response) => {
+    res.json({ clientId: process.env.GOOGLE_CLIENT_ID });
+});
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -508,13 +513,13 @@ app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res:
                 id: Number(id),
             },
         });
-       expressWs.getWss().clients.forEach(
-           (client: any) =>
+        expressWs.getWss().clients.forEach(
+            (client: any) =>
                 client.send(JSON.stringify({
                     type: 'delete',
                     id: deletedItem.id
-            }))
-       );
+                }))
+        );
         logger.info(`Item deleted`);
         return res.status(204).send();
 
@@ -522,5 +527,4 @@ app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res:
         res.status(500).send((error as Error).message || 'Something went wrong')
     }
 });
-
 

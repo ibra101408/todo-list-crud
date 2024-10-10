@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon -e js,ts,yaml,json,prisma --exec ts-node index.ts",
-    "test": "npx cypress open -b chrome --e2e"
+    "start": "nodemon index.ts",
+    "test": "npx cypress open -b chrome --e2e",
+    "build": "npx tsc"
   },
   "keywords": [],
   "author": "",
@@ -47,6 +48,7 @@
     "bcrypt": "^5.1.0",
     "connect-sse": "^1.2.0",
     "core-js": "^3.31.1",
+    "cors": "^2.8.5",
     "cypress": "^12.10.0",
     "cypress-cucumber-preprocessor": "^4.3.1",
     "dotenv": "^16.0.3",

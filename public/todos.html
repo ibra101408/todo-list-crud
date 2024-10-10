@@ -81,6 +81,8 @@
                 </div>
             </div>
         </div>
+    </div>
+
         <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
@@ -159,7 +161,6 @@
                                     id: this.editItem.id,
                                     description: this.editItem.description,
                                 }));
-
                                 // Reset the edit item
                                 this.editItem = null;
 
@@ -285,7 +286,7 @@
             const connection = new WebSocket('wss://localhost:8080');
 
             connection.onopen = () => {
-                console.log('connected');
+                console.log('connected', connection);
             };
 
             connection.onerror = (error) => {
@@ -318,6 +319,5 @@
                     connection;
                 }}
         </script>
-    </div>
     </body>
 </html>

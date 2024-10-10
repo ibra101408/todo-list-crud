@@ -64,21 +64,27 @@
             const {createApp} = Vue;
 
             window.onload = function () {
+                fetch('/config')
+                    .then(response => response.json())
+                    .then(config => {
+                        google.accounts.id.initialize({
+                            client_id: config.clientId,  // Use the fetched client_id
+                            callback: handleCredentialResponse,
+                        });
 
-                google.accounts.id.initialize({
-                    client_id: '618208179476-n1rdmsujrjeidv3uqqgaj5l0rrtgefg8.apps.googleusercontent.com',
-                    callback: handleCredentialResponse,
-                });
-
-                google.accounts.id.renderButton(
-                    document.getElementById('signInDiv'),
-                    {
-                        theme: 'filled_blue',
-                        size: 'large',
-                        text: 'long',
-                        type: 'standard'
-                    }
-                )
+                        google.accounts.id.renderButton(
+                            document.getElementById('signInDiv'),
+                            {
+                                theme: 'filled_blue',
+                                size: 'large',
+                                text: 'long',
+                                type: 'standard'
+                            }
+                        );
+                    })
+                    .catch(error => {
+                        console.error('Error fetching client_id:', error);
+                    });
             };
 
             function handleCredentialResponse(response) {
