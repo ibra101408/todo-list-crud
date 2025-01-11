@@ -253,6 +253,7 @@ paths:
       security:
         - Bearer: []
       description: Get items
+
     post:
       requestBody:
         content:

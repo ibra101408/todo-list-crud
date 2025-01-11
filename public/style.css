@@ -1,25 +1,125 @@
-
 body {
-    background-color: #f5f5f5;
+    background-color: rgba(136, 136, 136, 0.75);
     color: #333333;
-    font-family: Arial, sans-serif;
+    margin-top: 6rem;
 }
+
 button {
     border-radius: 100%;
 }
+
 .todos {
     text-align: center;
     margin-bottom: 20px;
 }
-
-.add-items {
-    margin-bottom: 20px;
+.signInForm{
+    width: 40%;
 }
 
-.todo-list-input {
+.navbar-toggler {
+    pointer-events: auto; /* Ensure the button can receive clicks */
+}
+
+.suggestRedirect{
+    margin: 1rem 0;
+}
+#swaggerRedirect{
+    color: #85EA2D;
+}
+#swaggerRedirect:hover{
+    color: rgb(192, 255, 115);
+}
+
+.todoContainerButton{
+    background: none;
+    border: none;
+    margin-left: 0;
+    cursor: pointer;
+    display: flex;
+}
+.completedIcon{
+    color: green;
+}
+
+.editIcon{
+    color: grey;
+}
+
+.deleteIcon{
+    color: red;
+}
+
+.cardContainer{
+    background: none;
+    border: none;
+}
+.add-items {
+    gap: 1rem;
+    margin: 0 auto 3rem auto;
+    line-height: 5rem !important;
+    height: 3rem;
+    width: fit-content;
+}
+
+.todo-list{
+    padding-left: 0;
+}
+/*.todo-list-input {
     flex: 1;
     border-radius: 5px 0 0 5px;
+}*/.todo-list-input {
+       flex: 1;
+       border-radius: 5px 0 0 5px;
+       max-height: 150px; /* Set a maximum height */
+       overflow-y: auto; /* Enable vertical scrolling */
+       resize: none; /* Prevent manual resizing */
+       text-align: center; /* Center text horizontally */
+       display: flex; /* Enable flexbox */
+       align-items: center; /* Center content vertically */
+       justify-content: center; /* Center placeholder and input text horizontally */
+       padding: 0.5rem; /* Add padding to prevent text from sticking to the edge */
+       box-sizing: border-box; /* Ensure padding is included in width/height calculations */
+   }
+
+/* Center the placeholder text specifically */
+.todo-list-input::placeholder {
+    text-align: center;
 }
+.todo-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    min-height: 60px; /* Ensures a consistent minimum height */
+    max-width: 100%;
+}
+
+.todo-list li .form-check-label {
+    flex: 1; /* Takes up the remaining space */
+    word-wrap: break-word; /* Break words if they are too long */
+    white-space: normal; /* Allow wrapping to the next line */
+    margin-right: 10px; /* Add spacing between text and buttons */
+}
+
+.todo-list li .buttonContainer {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+}
+
+.todo-list li .todoContainerButton:hover {
+    background-color: #d4d4d4;
+}
+
+.todo-list li .completed {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
 
 .todo-list-add-btn {
     border-radius: 0 5px 5px 0;
@@ -45,11 +145,30 @@ button {
 .task-description {
     flex: 1;
     margin-left: 10px;
+    word-wrap: break-word;
+}
+
+.buttonContainer{
+    display: flex;
+    flex-direction: row-reverse;
+
+}
+
+.buttonContainer .btn{
+    margin-right: 0;
 }
 
 .completed {
     text-decoration: line-through;
     opacity: 0.7;
+}
+
+.editContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: stretch;
+    padding-bottom: 1rem;
 }
 
 .edit-button,
@@ -62,25 +181,105 @@ button {
     cursor: pointer;
     color: #ffffff;
 }
+.passSignUp{
+    margin-bottom: 1rem;
+}
 
 .btn-danger {
     margin-left: auto;
     margin-right: 1rem;
 }
 
-.edit-container{
+.edit-container {
     display: flex;
     padding-bottom: 15px;
 }
+.signInGoogleDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 @media (max-width: 576px) {
+    .add-items {
+        flex-wrap: wrap;
+    }
+    .signInForm{
+        width: auto;
+    }
+
+    .signout-submit-desktop {
+        display: none;
+    }
+    .todo-list-input {
+        border-radius: 5px;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .signInGoogleDiv {
+        margin-top: 1rem;
+        justify-content: flex-start;
+    }
+
+    .add-items {
+        gap: 0;
+        margin-bottom: 7rem;
+    }
+
+    .todo-list-add-btn {
+        border-radius: 5px;
+        width: 100%;
+    }
+
     .list-wrapper li {
         flex-direction: column;
         align-items: flex-start;
+        position: relative;
+        gap: 1rem;
+        padding-bottom: 1rem;
     }
+    .buttonContainer{
+        display: flex;
+        width: 100%;
+        flex-direction: row-reverse;
+        justify-content: space-around;
+        align-items: stretch;
+    }
+
 
     .task-description {
         margin-top: 5px;
     }
 
+    .list-wrapper li .btn {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+  /*  ul.d-flex.flex-column-reverse.todo-list{
+        padding: 0;
+        width: auto;
+    }
+*/
+    .edit-button,
+    .save-button,
+    .cancel-button {
+        text-align: center;
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .editContainer{
+        flex-direction: column;
+        gap: 0.5rem;
+        padding-bottom: 2rem;
+    }
+    .btn-danger {
+        margin-left: 0;
+        margin-right: 0;
+    }
 }

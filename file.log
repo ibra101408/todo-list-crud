@@ -11,3 +11,217 @@
 {"level":"info","message":"Session deleted: c55b2460-8377-4dc7-ad43-9b1c9204e86b","timestamp":"30-08-2023 11:55:42"}
 {"level":"info","message":"User logged in via Google: daniil.vodenejev@voco.ee","timestamp":"30-08-2023 11:56:06"}
 {"level":"info","message":"User logged in via Google: daniil.vodenejev@voco.ee","timestamp":"30-08-2023 11:56:18"}
+{"level":"info","message":"User created. Email: new_user","timestamp":"21-02-2024 21:03:06"}
+{"level":"info","message":"User logged in. User email: new_user","timestamp":"21-02-2024 21:03:27"}
+{"level":"info","message":"New item added: new todo","timestamp":"21-02-2024 21:03:35"}
+{"level":"info","message":"New item added: todo","timestamp":"21-02-2024 21:03:38"}
+{"level":"info","message":"Item updated: todo1, completed: undefined","timestamp":"21-02-2024 21:03:44"}
+{"level":"info","message":"Item deleted","timestamp":"21-02-2024 21:03:49"}
+{"level":"info","message":"New item added: vdf","timestamp":"21-02-2024 21:03:53"}
+{"level":"info","message":"Item updated: vdf, completed: true","timestamp":"21-02-2024 21:03:54"}
+{"level":"info","message":"Item updated: cd, completed: undefined","timestamp":"21-02-2024 21:03:59"}
+{"level":"info","message":"Item deleted","timestamp":"21-02-2024 21:04:01"}
+{"level":"info","message":"Session deleted: 888f34f0-36f6-4fec-b339-1f62a1a437bd","timestamp":"21-02-2024 21:04:03"}
+{"level":"info","message":"User logged in via Google: danikvod@gmail.com","timestamp":"21-02-2024 21:04:12"}
+{"level":"info","message":"User logged in via Google: danikvod@gmail.com","timestamp":"21-02-2024 21:04:17"}
+{"level":"info","message":"New item added: nrnr","timestamp":"21-02-2024 21:04:21"}
+{"level":"info","message":"Session deleted: b622ef0c-50d3-4036-b6b4-f96eecd417df","timestamp":"21-02-2024 21:04:23"}
+{"level":"info","message":"User logged in. User email: new_user","timestamp":"21-02-2024 21:04:32"}
+{"level":"info","message":"Item updated: new todo, completed: true","timestamp":"21-02-2024 21:04:36"}
+{"level":"info","message":"Session deleted: bcad5d89-b8b1-4cb0-b0b4-341eafdf8c13","timestamp":"21-02-2024 21:04:37"}
+{"level":"info","message":"User logged in. User email: new_user","timestamp":"21-02-2024 21:04:49"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"24-04-2024 15:41:41"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"24-04-2024 15:41:45"}
+{"level":"info","message":"New item added: hei","timestamp":"24-04-2024 15:41:49"}
+{"level":"info","message":"Item updated: heife, completed: undefined","timestamp":"24-04-2024 15:41:53"}
+{"level":"info","message":"Session deleted: 030118f3-7cb6-4cc5-a804-ae69c8ba9050","timestamp":"24-04-2024 15:42:02"}
+{"level":"info","message":"User created. Email: dan","timestamp":"24-04-2024 15:44:46"}
+{"level":"info","message":"User logged in. User email: dan","timestamp":"24-04-2024 15:44:58"}
+{"level":"info","message":"New item added: denjw","timestamp":"24-04-2024 15:45:04"}
+{"level":"info","message":"Item updated: denjwded, completed: undefined","timestamp":"24-04-2024 15:45:09"}
+{"level":"info","message":"Item deleted","timestamp":"24-04-2024 15:45:11"}
+{"level":"info","message":"New item added: fdemwk","timestamp":"24-04-2024 15:45:13"}
+{"level":"info","message":"Item updated: fdemwk, completed: true","timestamp":"24-04-2024 15:45:14"}
+{"level":"info","message":"Item updated: fdemwk1, completed: undefined","timestamp":"24-04-2024 15:45:21"}
+{"level":"info","message":"Session deleted: 0adb9e81-33e9-460b-9c65-56b532ffbbd3","timestamp":"24-04-2024 15:45:25"}
+{"level":"info","message":"User logged in. User email: dan","timestamp":"24-04-2024 15:45:31"}
+{"level":"info","message":"Session deleted: e44f4b6b-74bf-461b-b7b4-8e8c8f9efc3c","timestamp":"24-04-2024 15:45:36"}
+{"level":"info","message":"User logged in. User email: dan","timestamp":"24-04-2024 15:47:33"}
+{"level":"info","message":"Item updated: fdemwk1, completed: true","timestamp":"24-04-2024 15:53:32"}
+{"level":"info","message":"Item updated: fdemwk1, completed: false","timestamp":"24-04-2024 15:53:32"}
+{"level":"info","message":"Item updated: fdemwkdd, completed: undefined","timestamp":"24-04-2024 15:53:38"}
+{"level":"info","message":"Session deleted: 26418b3e-569e-4741-87a8-ad8cf442a9dd","timestamp":"24-04-2024 15:53:40"}
+{"level":"info","message":"User logged in. User email: dan","timestamp":"24-04-2024 15:53:47"}
+{"level":"info","message":"New item added: ,vl","timestamp":"24-04-2024 15:53:52"}
+{"level":"info","message":"Item updated: ,vfdffd, completed: undefined","timestamp":"24-04-2024 15:53:57"}
+{"level":"info","message":"Item deleted","timestamp":"24-04-2024 15:54:00"}
+{"level":"info","message":"User logged in. User email: dan","timestamp":"24-04-2024 20:11:46"}
+{"level":"info","message":"Session deleted: dfafbdf9-ab89-4d0a-8767-c3348530c914","timestamp":"24-04-2024 20:11:50"}
+{"level":"info","message":"User created. Email: dan1","timestamp":"24-04-2024 20:18:06"}
+{"level":"info","message":"User logged in. User email: dan1","timestamp":"24-04-2024 20:18:17"}
+{"level":"info","message":"Session deleted: 85676d4a-6246-4898-8048-6a310fd55d17","timestamp":"24-04-2024 20:18:20"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@voco.ee","timestamp":"24-04-2024 20:50:20"}
+{"level":"info","message":"New item added: new to","timestamp":"24-04-2024 20:51:33"}
+{"level":"info","message":"New item added: new to","timestamp":"24-04-2024 20:51:34"}
+{"level":"info","message":"New item added: new to","timestamp":"24-04-2024 20:51:35"}
+{"level":"info","message":"Session deleted: 26d72ac0-d6a8-4e47-baf4-cc6cab6ea838","timestamp":"24-04-2024 20:52:41"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@voco.ee","timestamp":"24-04-2024 21:16:00"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@voco.ee","timestamp":"24-04-2024 21:16:48"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@voco.ee","timestamp":"24-04-2024 21:17:27"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"24-04-2024 21:24:52"}
+{"level":"info","message":"Item updated: heife, completed: true","timestamp":"24-04-2024 21:24:55"}
+{"level":"info","message":"Session deleted: 4bb3dfff-ea16-40d7-a17b-332a6ec87632","timestamp":"24-04-2024 21:28:36"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"24-04-2024 21:28:41"}
+{"level":"info","message":"Session deleted: 2b48a86c-fc0f-454a-934c-b2134fbece0d","timestamp":"24-04-2024 21:28:43"}
+{"level":"info","message":"User logged in. User email: dan","timestamp":"24-04-2024 21:29:56"}
+{"level":"info","message":"New item added: fewj","timestamp":"24-04-2024 21:30:03"}
+{"level":"info","message":"Session deleted: 0a1f800f-03c3-4945-9e97-6a66a8eb5a3a","timestamp":"25-04-2024 13:21:30"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"25-04-2024 13:21:55"}
+{"level":"info","message":"Session deleted: f637c8c1-682c-4777-8858-55e4fd6940a4","timestamp":"25-04-2024 13:21:58"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"25-04-2024 15:34:28"}
+{"level":"info","message":"New item added: fmrje","timestamp":"25-04-2024 15:37:07"}
+{"level":"info","message":"New item added: vfmrke","timestamp":"25-04-2024 15:37:11"}
+{"level":"info","message":"Session deleted: 02b0eabb-bbf1-496e-b47a-6e0a93782c0b","timestamp":"25-04-2024 15:39:14"}
+{"level":"info","message":"User logged in. User email: dan1","timestamp":"25-04-2024 15:39:19"}
+{"level":"info","message":"New item added: mfker","timestamp":"25-04-2024 15:39:23"}
+{"level":"info","message":"New item added: new new new","timestamp":"25-04-2024 15:39:27"}
+{"level":"info","message":"User logged in. User email: dan","timestamp":"25-04-2024 15:44:49"}
+{"level":"info","message":"New item added: dmsdk","timestamp":"25-04-2024 15:45:00"}
+{"level":"info","message":"Item updated: dmsdk, completed: true","timestamp":"25-04-2024 15:45:02"}
+{"level":"info","message":"Item updated: dmsdk, completed: false","timestamp":"25-04-2024 15:45:08"}
+{"level":"info","message":"New item added: mk","timestamp":"25-04-2024 17:49:13"}
+{"level":"info","message":"New item added: fmekw","timestamp":"25-04-2024 20:40:08"}
+{"level":"info","message":"New item added: fmkew","timestamp":"28-04-2024 12:31:02"}
+{"level":"info","message":"Item deleted","timestamp":"28-04-2024 12:31:05"}
+{"level":"info","message":"Item deleted","timestamp":"28-04-2024 12:31:06"}
+{"level":"info","message":"Item deleted","timestamp":"28-04-2024 12:31:07"}
+{"level":"info","message":"Item deleted","timestamp":"28-04-2024 12:31:08"}
+{"level":"info","message":"Item updated: fewj111, completed: undefined","timestamp":"28-04-2024 12:31:19"}
+{"level":"info","message":"User logged in. User email: dan","timestamp":"02-05-2024 13:13:28"}
+{"level":"info","message":"New item added: frewj","timestamp":"02-05-2024 13:13:36"}
+{"level":"info","message":"New item added: ef","timestamp":"02-05-2024 13:43:42"}
+{"level":"info","message":"New item added: emwk","timestamp":"02-05-2024 16:35:10"}
+{"level":"info","message":"New item added: cmdk","timestamp":"02-05-2024 17:09:41"}
+{"level":"info","message":"New item added: mlmlk","timestamp":"02-05-2024 17:11:31"}
+{"level":"info","message":"New item added: cdjk","timestamp":"02-05-2024 17:11:45"}
+{"level":"info","message":"New item added: dm","timestamp":"02-05-2024 17:24:52"}
+{"level":"info","message":"User logged in. User email: dan","timestamp":"19-05-2024 12:41:06"}
+{"level":"info","message":"New item added: fmewk","timestamp":"19-05-2024 12:42:32"}
+{"level":"info","message":"New item added: emk","timestamp":"19-05-2024 12:43:42"}
+{"level":"info","message":"Session deleted: 3030eb52-4a96-49a1-9c60-67eec6cfdcb0","timestamp":"19-05-2024 12:43:45"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"19-05-2024 16:23:31"}
+{"level":"info","message":"User logged in via Google: danikvod@gmail.com","timestamp":"19-05-2024 21:53:50"}
+{"level":"info","message":"New item added: femwkˇ","timestamp":"19-05-2024 21:53:55"}
+{"level":"info","message":"Item deleted","timestamp":"19-05-2024 21:53:57"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"20-05-2024 15:36:47"}
+{"level":"info","message":"Session deleted: 62bf42ef-d078-4d1a-9897-391659af58f3","timestamp":"20-05-2024 15:37:01"}
+{"level":"info","message":"User logged in via Google: danikvod@gmail.com","timestamp":"06-10-2024 14:42:56"}
+{"level":"info","message":"Session deleted: 727869d1-c71b-4395-aa29-b091f19aee86","timestamp":"06-10-2024 22:48:15"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"10-10-2024 19:07:52"}
+{"level":"info","message":"User logged in via Google: danikvod@gmail.com","timestamp":"20-10-2024 14:00:19"}
+{"level":"info","message":"Session deleted: 813d749e-61cf-4f9e-9d5c-4c3271f06a30","timestamp":"20-10-2024 14:00:21"}
+{"level":"info","message":"User logged in via Google: danikvod@gmail.com","timestamp":"20-10-2024 14:00:57"}
+{"level":"info","message":"Session deleted: f3112456-c044-445b-b463-90f7b6319b4d","timestamp":"20-10-2024 14:01:07"}
+{"level":"info","message":"User logged in via Google: danikvod@gmail.com","timestamp":"23-10-2024 17:10:12"}
+{"level":"info","message":"Session deleted: 2f42c450-7fdb-4096-b45f-a05419b8fbfa","timestamp":"23-10-2024 17:10:26"}
+{"level":"info","message":"User logged in via Google: danikvod@gmail.com","timestamp":"18-12-2024 14:25:29"}
+{"level":"info","message":"Item updated: nrnr, completed: true","timestamp":"18-12-2024 14:31:33"}
+{"level":"info","message":"Item updated: nrnr, completed: false","timestamp":"18-12-2024 14:31:34"}
+{"level":"info","message":"New item added: new todo","timestamp":"18-12-2024 14:34:34"}
+{"level":"info","message":"Item updated: new todo, completed: true","timestamp":"18-12-2024 14:38:18"}
+{"level":"info","message":"Item updated: new todo, completed: false","timestamp":"18-12-2024 14:38:19"}
+{"level":"info","message":"Item deleted","timestamp":"18-12-2024 14:38:21"}
+{"level":"info","message":"Item updated: 1212, completed: undefined","timestamp":"18-12-2024 14:38:27"}
+{"level":"info","message":"Item updated: 1212, completed: true","timestamp":"18-12-2024 14:38:29"}
+{"level":"info","message":"Item updated: 1212, completed: false","timestamp":"18-12-2024 14:38:29"}
+{"level":"info","message":"Item updated: 1212, completed: true","timestamp":"18-12-2024 14:38:31"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"05-01-2025 11:45:02"}
+{"level":"info","message":"User logged in via Google: danikvod@gmail.com","timestamp":"05-01-2025 11:51:10"}
+{"level":"info","message":"Item updated: 1212, completed: false","timestamp":"05-01-2025 12:00:56"}
+{"level":"info","message":"New item added: wanna make i beautiful text but donno what to write here. Rammstein","timestamp":"05-01-2025 12:15:50"}
+{"level":"info","message":"New item added: wanna make i beautiful text but donno what to write here. Rammsteinwanna make i beautiful text but donno what to write here. Rammsteinwanna make i beautiful text but donno what to write here. Rammsteinwanna make i beautiful text but donno what to write here. Rammstein","timestamp":"05-01-2025 12:15:57"}
+{"level":"info","message":"Item updated: wanna make i beautiful text but donno, completed: undefined","timestamp":"05-01-2025 12:16:11"}
+{"level":"info","message":"Item deleted","timestamp":"05-01-2025 12:16:14"}
+{"level":"info","message":"Item updated: dwqwq, completed: undefined","timestamp":"05-01-2025 12:46:53"}
+{"level":"info","message":"Item updated: wanna make i beautiful text but donno what to write here., completed: undefined","timestamp":"05-01-2025 15:31:43"}
+{"level":"info","message":"User logged in. User email: root","timestamp":"05-01-2025 17:10:26"}
+{"level":"info","message":"New item added: mkwe","timestamp":"05-01-2025 17:16:48"}
+{"level":"info","message":"Item deleted","timestamp":"05-01-2025 17:16:52"}
+{"level":"info","message":"Item updated: new task, completed: false","timestamp":"05-01-2025 17:22:33"}
+{"level":"info","message":"Item updated: new task, completed: true","timestamp":"05-01-2025 17:22:33"}
+{"level":"info","message":"Item updated: newmkm, completed: undefined","timestamp":"05-01-2025 17:22:39"}
+{"level":"info","message":"Session deleted: 37b5c435-c190-4849-9d9c-48073a0ba629","timestamp":"05-01-2025 17:34:56"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"05-01-2025 17:35:04"}
+{"level":"info","message":"New item added: njew","timestamp":"05-01-2025 17:35:07"}
+{"level":"info","message":"Session deleted: ea7b62b9-c9bb-4d35-a60d-f44eb36a1a35","timestamp":"05-01-2025 17:37:35"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@gmail.com","timestamp":"05-01-2025 17:37:42"}
+{"level":"info","message":"Session deleted: edb9a9fd-0a86-4220-b64f-3a4308b91c2b","timestamp":"05-01-2025 17:38:27"}
+{"level":"info","message":"User logged in. User email: root","timestamp":"07-01-2025 18:09:48"}
+{"level":"info","message":"New item added: fenwjfnkqj","timestamp":"07-01-2025 18:38:07"}
+{"level":"info","message":"New item added: fmwek","timestamp":"07-01-2025 18:38:09"}
+{"level":"info","message":"New item added: fmkewfmw\n","timestamp":"07-01-2025 18:38:12"}
+{"level":"info","message":"New item added: fmjw","timestamp":"07-01-2025 18:38:13"}
+{"level":"info","message":"New item added: fewj","timestamp":"07-01-2025 18:38:18"}
+{"level":"info","message":"New item added: frem","timestamp":"07-01-2025 18:38:19"}
+{"level":"info","message":"Item updated: frem, completed: true","timestamp":"07-01-2025 19:33:52"}
+{"level":"info","message":"Item updated: frem, completed: false","timestamp":"07-01-2025 19:33:52"}
+{"level":"info","message":"Item updated: frem, completed: true","timestamp":"07-01-2025 19:33:53"}
+{"level":"info","message":"Item updated: frem, completed: false","timestamp":"07-01-2025 19:34:29"}
+{"level":"info","message":"Item updated: frem, completed: true","timestamp":"07-01-2025 19:34:30"}
+{"level":"info","message":"Item updated: frem, completed: false","timestamp":"07-01-2025 19:34:30"}
+{"level":"info","message":"Item updated: frem, completed: true","timestamp":"07-01-2025 19:34:31"}
+{"level":"info","message":"Item updated: frem, completed: false","timestamp":"07-01-2025 19:34:32"}
+{"level":"info","message":"Item updated: frem, completed: true","timestamp":"07-01-2025 19:34:33"}
+{"level":"info","message":"Item updated: frem, completed: false","timestamp":"07-01-2025 19:34:35"}
+{"level":"info","message":"Item updated: frem, completed: true","timestamp":"07-01-2025 19:34:47"}
+{"level":"info","message":"Item updated: frem, completed: false","timestamp":"07-01-2025 19:34:48"}
+{"level":"info","message":"Item updated: frem, completed: true","timestamp":"07-01-2025 19:34:49"}
+{"level":"info","message":"Item updated: frem, completed: false","timestamp":"07-01-2025 19:34:49"}
+{"level":"info","message":"Item updated: frem, completed: true","timestamp":"07-01-2025 19:34:49"}
+{"level":"info","message":"New item added: nfjwenfwjefwenfwenwjk","timestamp":"07-01-2025 19:35:12"}
+{"level":"info","message":"User logged in. User email: root","timestamp":"10-01-2025 17:50:39"}
+{"level":"info","message":"New item added: firnernfenfenfejnfecmiewmfewndecwefjefewmfcjmewnfurenfjrcmweklmelcmlewmc kledc","timestamp":"10-01-2025 18:40:40"}
+{"level":"info","message":"Item updated: firnernfenfenfejnfecmiewmfewndecwefjefewmfcjmewnfurenfjrcmweklmelcmlewmc kledc, completed: true","timestamp":"10-01-2025 18:49:48"}
+{"level":"info","message":"Item updated: firnernfenfenfejnfecmiewmfewndecwefjefewmfcjmewnfurenfjrcmweklmelcmlewmc kledc, completed: false","timestamp":"10-01-2025 18:49:49"}
+{"level":"info","message":"Item deleted","timestamp":"10-01-2025 18:50:06"}
+{"level":"info","message":"Item deleted","timestamp":"10-01-2025 18:50:14"}
+{"level":"info","message":"Item updated: firnernfenfenfejnfecmiewmfewndecwefjefewmfcjmewnfurenfjrcmwekldwed melcmlewmc kledc, completed: undefined","timestamp":"10-01-2025 18:57:14"}
+{"level":"info","message":"Item updated: firnernfenfenfejnfecmiewmfew ndecwefjefewmfcjmewnfurenfjrcmwekldwed melcmlewmc kledc, completed: undefined","timestamp":"10-01-2025 18:57:30"}
+{"level":"info","message":"Item updated: firnernfenfenfejnfecmiewmfew ndecwefjefewmfcjmewnfu renfjrcmwekldwed melcmlewmc kledc, completed: undefined","timestamp":"10-01-2025 18:57:51"}
+{"level":"info","message":"Item updated: firnernfenfenfejnfecmiewmfew ndecwefjefewmfcjmewnfu renfjrcmwekldwed melcmlewmc kledc, completed: true","timestamp":"10-01-2025 18:58:03"}
+{"level":"info","message":"Item updated: firnernfenfenfejnfecmiewmfew ndecwefjefewmfcjmewnfu renfjrcmwekldwed melcmlewmc kledc, completed: false","timestamp":"10-01-2025 18:58:06"}
+{"level":"info","message":"Item updated: fmwekfd, completed: undefined","timestamp":"10-01-2025 19:04:27"}
+{"level":"info","message":"Item updated: newmkm, completed: true","timestamp":"10-01-2025 19:04:31"}
+{"level":"info","message":"Item updated: newmkm, completed: false","timestamp":"10-01-2025 19:04:32"}
+{"level":"info","message":"Item deleted","timestamp":"10-01-2025 19:04:36"}
+{"level":"info","message":"Item updated: new task, completed: false","timestamp":"10-01-2025 19:04:37"}
+{"level":"info","message":"Item updated: new task, completed: true","timestamp":"10-01-2025 19:04:38"}
+{"level":"info","message":"Item updated: new task, completed: false","timestamp":"10-01-2025 19:04:39"}
+{"level":"info","message":"New item added: refmkeaf","timestamp":"10-01-2025 19:04:47"}
+{"level":"info","message":"Session deleted: 229a3861-7562-4ffb-9ee7-26b420bd11e5","timestamp":"10-01-2025 19:04:52"}
+{"level":"info","message":"User logged in. User email: root","timestamp":"11-01-2025 23:29:43"}
+{"level":"info","message":"Item deleted","timestamp":"11-01-2025 23:31:45"}
+{"level":"info","message":"Item deleted","timestamp":"11-01-2025 23:31:47"}
+{"level":"info","message":"Item deleted","timestamp":"11-01-2025 23:31:50"}
+{"level":"info","message":"Item deleted","timestamp":"11-01-2025 23:31:51"}
+{"level":"info","message":"Item deleted","timestamp":"11-01-2025 23:31:54"}
+{"level":"info","message":"Item deleted","timestamp":"11-01-2025 23:31:55"}
+{"level":"info","message":"Item deleted","timestamp":"11-01-2025 23:31:56"}
+{"level":"info","message":"New item added: make dishes","timestamp":"11-01-2025 23:32:02"}
+{"level":"info","message":"Item updated: new task, completed: true","timestamp":"11-01-2025 23:32:09"}
+{"level":"info","message":"Item updated: new task, completed: false","timestamp":"11-01-2025 23:32:10"}
+{"level":"info","message":"New item added: shower before 6am","timestamp":"11-01-2025 23:32:32"}
+{"level":"info","message":"New item added: make homework\n","timestamp":"11-01-2025 23:33:00"}
+{"level":"info","message":"Item updated: shower before 8am, completed: undefined","timestamp":"11-01-2025 23:33:20"}
+{"level":"info","message":"Session deleted: 08345671-9731-4d26-a258-be4d3fabc4ce","timestamp":"11-01-2025 23:51:37"}
+{"level":"info","message":"User logged in. User email: root","timestamp":"11-01-2025 23:55:13"}
+{"level":"info","message":"User logged in. User email: root","timestamp":"12-01-2025 00:00:43"}
+{"level":"info","message":"New item added: post from swagger","timestamp":"12-01-2025 00:02:30"}
+{"level":"info","message":"User logged in. User email: root","timestamp":"12-01-2025 00:02:51"}
+{"level":"info","message":"Item deleted","timestamp":"12-01-2025 00:03:48"}
+{"level":"info","message":"Item deleted","timestamp":"12-01-2025 00:04:35"}
+{"level":"info","message":"Item updated: new task edited from swagger, completed: true","timestamp":"12-01-2025 00:05:25"}
+{"level":"info","message":"User logged in via Google: daniil.vodenejev@voco.ee","timestamp":"12-01-2025 00:05:56"}
+{"level":"info","message":"Item updated: fkrnfkjnr, completed: false","timestamp":"12-01-2025 00:13:08"}
+{"level":"info","message":"New item added: ferwkfnej cvwek efie fuewwnfewjwf wuhfhe fheufhe fuehfe ufuefheuhf bwe fuh fefu ew","timestamp":"12-01-2025 00:13:23"}
+{"level":"info","message":"Item deleted","timestamp":"12-01-2025 00:13:29"}

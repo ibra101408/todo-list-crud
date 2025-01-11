@@ -11,26 +11,6 @@
     <link type="text/css" rel="stylesheet" href="style.css">
 </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="#">Todo List</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/signin.html">Sign In</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/signup.html">Sign Up</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
         <div id="app" class="container mt-5">
             <h1>Sign Up</h1>
             <form>
@@ -39,10 +19,14 @@
                     <input type="email" v-model="signUpEmail" class="form-control" id="signup-email" data-cy="signup-email" aria-describedby="emailHelp">
                     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                 </div>
-                <div class="mb-3">
+                <div class="passSignUp">
                     <label for="signup-password" class="form-label">Password</label>
                     <input type="password" v-model="signUpPassword" class="form-control" id="signup-password" data-cy="signup-password">
                 </div>
+                <div class="suggestRedirect">
+                    <a href="./signin.html">Already have an account?</a>
+                </div>
+
                 <button id="signup-submit" type="button" class="btn btn-primary" @click="submitSignUpForm" data-cy="signup-submit">Sign Up</button>
             </form>
         </div>

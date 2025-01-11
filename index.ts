@@ -300,7 +300,7 @@ app.post('/sessions', async (req: PostSessionRequest, res: PostSessionResponse) 
     const validPassword = await bcrypt.compare(req.body.password, user.password as string);
 
     if (!validPassword) {
-        return res.status(401).send('Invalid email or password')
+        return res.status(401).send('Invalid email or password1')
     }
 
     // Create session
