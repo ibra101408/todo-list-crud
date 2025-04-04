@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 import * as https from 'https';
 import * as fs from 'fs';
+import cookieParser from 'cookie-parser';
 import WebSocket from 'ws';
 const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
@@ -44,7 +45,7 @@ import xmlparser from 'express-xml-bodyparser';
 
 //app.use(xmlparser());
 app.use(xmlparser({ explicitArray: false }));
-
+app.use(cookieParser());
 app.use(express.json());
 
 // Add Swagger
@@ -321,80 +322,99 @@ app.post('/sessions', async (req: PostSessionRequest, res: PostSessionResponse) 
 
 
 // Add authorization middleware
+
 const authorizeRequest = async (req: IRequestWithSession, res: Response, next: NextFunction) => {
+    // 1. First check for regular auth token
+    const authHeader = req.headers.authorization;
 
-    // Validate session
-    if (!req.headers.authorization) {
-        return res.status(401).send('Authorization header required')
+    // 2. Check for guest cookie if no auth header
+    if (!authHeader) {
+        let guestId = req.cookies.guestId;
+
+        // Generate new guest ID if none exists
+        if (!guestId) {
+            guestId = `guest-${Math.random().toString(36).substring(2, 11)}`;
+            res.cookie('guestId', guestId, {
+                maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax'
+            });
+        }
+
+        req.userId = guestId;
+        req.sessionToken = undefined;
+        return next();
     }
 
-    // Validate extract session format
-    if (!req.headers.authorization.startsWith('Bearer') || req.headers.authorization.split(' ').length !== 2) {
-        return res.status(401).send('Invalid authorization header format')
+    // 3. Handle authenticated users (existing logic)
+    if (!authHeader.startsWith('Bearer') || authHeader.split(' ').length !== 2) {
+        return res.status(401).send('Invalid authorization header format');
     }
 
-    // Extract sessionToken
-    const sessionToken = req.headers.authorization.split(' ')[1]
-
+    const sessionToken = authHeader.split(' ')[1];
     const session = await prisma.session.findUnique({
-        where: {
-            sessionToken: sessionToken
-        }
-    })
+        where: { sessionToken },
+        select: { userId: true }
+    });
 
-    if (!session) {
-        return res.status(401).send('Invalid session token (!session)')
+    if (!session?.userId) {
+        return res.status(401).send('Invalid session token1');
     }
 
-    // Add user to request
-    let user = await prisma.user.findUnique({
-        where: {
-            id: session.userId
-        }
-    })
+    const user = await prisma.user.findUnique({
+        where: { id: session.userId }
+    });
 
-    // Validate user
     if (!user) {
-        return res.status(401).send('Invalid session token (!user)')
+        return res.status(401).send('Invalid session token2');
     }
 
-    // Add session to request
-    req.userId = user.id
-    req.sessionToken = sessionToken
+    req.userId = user.id;
+    req.sessionToken = sessionToken;
+    next();
+};
 
-    next()
-}
-
-
-app.delete('/sessions', authorizeRequest, async (req: IRequestWithSession, res:DeleteSessionResponse) => {
+app.delete('/sessions', async (req: IRequestWithSession, res: Response) => {
     try {
-        // Delete session
-        await prisma.session.delete({
-            where: {
-                sessionToken: req.sessionToken
-            }
+        // Handle authenticated users
+        if (req.headers.authorization) {
+            const sessionToken = req.headers.authorization.split(' ')[1];
+
+            // Use deleteMany to avoid "record not found" errors
+            await prisma.session.deleteMany({
+                where: { sessionToken }
+            });
+        }
+
+        // Clear guest cookie if exists
+        res.clearCookie('guestId', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax'
         });
 
-        // Return success response 942c2fb1-29dc-44b6-9c5b-c11a12434a9d
-        res.status(204).end();
+        return res.status(204).end();
     } catch (error) {
-        // Return error response
-        res.status(500).json({ error: 'Failed to sign out' });
+        console.error('Sign out error:', error);
+        return res.status(500).send('Error during sign out');
     }
-    logger.info(`Session deleted: ${req.sessionToken}`);
 });
 
 // Get items
 app.get('/items', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
 
-    // Get items for the signed-in user
+    const isGuest = typeof req.userId === 'string' && req.userId.startsWith('guest-');
+
     const items = await prisma.item.findMany({
         where: {
-            userId: req.userId
+            OR: [
+                isGuest ? { guestId: req.userId as string } : { userId: req.userId as number },
+                // Add other conditions if needed
+            ]
         }
-    })
+    });
 
-    // Return items
     res.status(200).json(items)
 });
 
@@ -403,16 +423,17 @@ app.post('/items', authorizeRequest, async (req: IRequestWithSession, res: Respo
         const { description } = req.body;
         const newDescription = String(description);
         const userId = req.userId;
-        if (userId === undefined) {
-            throw new Error('User ID is not defined');
-        }
+        const isGuest = typeof req.userId === 'string' && req.userId.startsWith('guest-');
+
         if (!newDescription) {
+
             return res.status(400).send('Description required');
         }
         const newItem = await prisma.item.create({
             data: {
                 description: newDescription,
-                userId
+                userId: isGuest ? null : (userId as number),  // Explicitly cast to number
+                guestId: isGuest ? (userId as string) : null,  // Explicitly cast to string
             },
         });
 
@@ -441,8 +462,6 @@ app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Re
         // Get id from req.params
         const { id } = req.params;
         const { description, completed } = req.body;
-        const newDescription = String(description);
-
 
         if (!description) {
             return
@@ -454,7 +473,7 @@ app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Re
             },
         });
 
-        if (!item || item.userId !== req.userId) {
+        if (!item || (item.userId && item.userId !== req.userId) || (item.guestId && item.guestId !== req.userId)) {
             return res.status(404).send('Item not found');
         }
 
@@ -491,40 +510,86 @@ app.put('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Re
     catch (error) {
         res.status(500).send((error as Error).message || 'Something went wrong')
     }
-});
-
-app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
-
+});app.delete('/items/:id', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
     try {
         const { id } = req.params;
+        const isGuest = typeof req.userId === 'string' && req.userId.startsWith('guest-');
 
         const item = await prisma.item.findUnique({
-            where: {
-                id: Number(id),
-            },
+            where: { id: Number(id) }
         });
 
-        if (!item || item.userId !== req.userId) {
+        if (!item) {
+            return res.status(404).send('Item not found');
+        }
+
+        // Check ownership
+        const isOwner = isGuest
+            ? item.guestId === req.userId
+            : item.userId === req.userId;
+
+        if (!isOwner) {
             return res.status(404).send('Item not found');
         }
 
         const deletedItem = await prisma.item.delete({
-            where: {
-                id: Number(id),
-            },
+            where: { id: Number(id) }
         });
-        expressWs.getWss().clients.forEach(
-            (client: any) =>
+
+        // Fixed WebSocket broadcast with proper typing
+        expressWs.getWss().clients.forEach((client: WebSocket) => {
+            if (client.readyState === WebSocket.OPEN) {
                 client.send(JSON.stringify({
                     type: 'delete',
                     id: deletedItem.id
-                }))
-        );
-        logger.info(`Item deleted`);
-        return res.status(204).send();
+                }));
+            }
+        });
 
-    }catch (error) {
-        res.status(500).send((error as Error).message || 'Something went wrong')
+        logger.info(`Item deleted`);
+        return res.status(204).end();
+
+    } catch (error) {
+        console.error('Delete error:', error);
+        res.status(500).send('Internal server error');
     }
+});
+
+// Guest initialization endpoint
+app.post('/api/guest-init', (req: IRequestWithSession, res: Response) => {
+    const guestId = req.cookies?.guestId || `guest-${Math.random().toString(36).substring(2, 11)}`;;
+
+    res.cookie('guestId', guestId, {
+        maxAge: 365 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+    });
+
+    res.status(200).send();
+});
+
+// Items endpoint (updated)
+app.get('/api/items', authorizeRequest, async (req: IRequestWithSession, res: Response) => {
+    const items = await prisma.item.findMany({
+        where: {
+            OR: [
+                { guestId: typeof req.userId === 'string' ? req.userId : undefined },
+                { userId: typeof req.userId === 'number' ? req.userId : undefined }
+            ]
+        }
+    });
+    res.json(items);
+});
+
+// Add this endpoint to your backend
+app.post('/clear-guest', (req: IRequestWithSession, res: Response) => {
+    // Clear the guestId cookie
+    res.clearCookie('guestId', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+    });
+    res.status(200).send();
 });
 

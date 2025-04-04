@@ -6,6 +6,6 @@ export interface IRequestWithSession extends Request {
     sessionToken?: string;
     user: any;
     session?: any;
-    userId?: number;
+    userId?: string | number;
     ws: WebSocket; // Add the 'ws' property of type 'WebSocket'
 }
