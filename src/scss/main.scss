@@ -1,0 +1,438 @@
+// Variables
+$primary: #11998e;
+$secondary: #38ef7d;
+$white: #fff;
+$gray: #9b9b9b;
+$dark-bg: #333333;
+
+// Base styles
+body {
+  background-color: $dark-bg;
+  color: $dark-bg;
+  font-size: 1.4rem;
+  margin-top: 6rem;
+}
+
+h1{
+  color: $white;
+  padding-bottom: 40px;
+}
+
+// Form group styling
+.form__group {
+  position: relative;
+  padding: 15px 0 0;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 3rem auto;
+  display: flex;
+  align-items: center;
+}
+
+.cardContainer {
+  background: $dark-bg;
+  border: none;
+}
+
+// Todo input styling
+.todo-list-input {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid $gray;
+  outline: 0;
+  font-size: 1.3rem;
+  color: $white;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+  resize: none;
+  height: 50px;
+  overflow-y: auto;
+  flex: 1;
+  border-radius: 5px 0 0 5px;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:placeholder-shown ~ .form__label {
+    font-size: 1.3rem;
+    cursor: text;
+    top: 20px;
+    left: 0;
+  }
+}
+
+// Label styling
+.form__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color: $gray;
+  pointer-events: none;
+}
+
+.form-check {
+  padding-left: 0;
+}
+
+// Focus effects
+.todo-list-input:focus {
+  ~ .form__label {
+    top: -10px;
+    font-size: 1.4rem;
+    color: $primary;
+    font-weight: 700;
+  }
+
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, $primary, $secondary);
+  border-image-slice: 1;
+}
+
+// Add button styling
+.todo-list-add-btn {
+  background: linear-gradient(to left, $primary, $secondary);
+  border: none;
+  color: $white;
+  height: 50px;
+  width: 50px;
+  font-size: 1.5rem;
+  border-radius: 0 15px 0 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 10px;
+}
+
+.todoContainerButton span {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.task-description.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+// Specific colors for each icon type
+.completedIcon {
+  background: linear-gradient(to right, $primary, $secondary);
+}
+
+.deleteIcon {
+  background: linear-gradient(to right, #F44336, #E57373);
+}
+
+.editIcon {
+  background: linear-gradient(to right, #FFC107, #FFD54F);
+}
+
+// Todo list items
+.todo-list {
+  padding-left: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid $gray;
+    margin-bottom: 10px;
+    background: none;
+    color: $white;
+    min-height: 60px;
+  }
+}
+
+// Responsive Styles
+@media (max-width: 768px) {
+  body {
+    margin-top: 2rem;
+  }
+  .form__group {
+    max-width: 90%;
+  }
+  .todo-list-input {
+    font-size: 1.1rem;
+    padding: 5px 0;
+  }
+  .todo-list-add-btn {
+    height: 45px;
+    width: 45px;
+    font-size: 1.3rem;
+  }
+  .todo-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px;
+  }
+  .buttonContainer {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .todoContainerButton {
+    flex: 1;
+    max-width: 50px;
+  }
+}
+
+
+// Auth Page Styles
+.auth-page {
+  background-color: $dark-bg;
+  color: $white;
+ // min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.auth-card {
+  background: lighten($dark-bg, 5%);
+  border-radius: 15px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.auth-title {
+  color: $white;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(to right, $primary, $secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-form {
+  margin-bottom: 1.5rem;
+}
+
+.auth-input {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid $gray;
+  outline: 0;
+  font-size: 1.1rem;
+  color: $white;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:placeholder-shown ~ .form__label {
+    font-size: 1.1rem;
+    cursor: text;
+    top: 20px;
+  }
+
+  &:focus {
+    ~ .form__label {
+      top: -10px;
+      font-size: 1rem;
+      color: $primary;
+      font-weight: 700;
+    }
+    padding-bottom: 6px;
+    font-weight: 700;
+    border-width: 3px;
+    border-image: linear-gradient(to right, $primary, $secondary);
+    border-image-slice: 1;
+  }
+}
+
+.auth-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, $primary, $secondary);
+  color: $white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.auth-links {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.auth-link {
+  color: $gray;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+
+  &:hover {
+    color: $secondary;
+    text-decoration: underline;
+  }
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: $gray;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid $gray;
+  }
+
+  &::before {
+    margin-right: 1rem;
+  }
+
+  &::after {
+    margin-left: 1rem;
+  }
+}
+
+.divider-text {
+  font-size: 0.9rem;
+}
+
+.google-signin-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+
+  .auth-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-input {
+    font-size: 1rem;
+  }
+
+  .auth-button {
+    padding: 10px;
+    font-size: 1rem;
+  }
+}
+
+// Add these styles to your existing auth styles
+// They'll reuse the same variables and base styles from signin
+
+.form-text {
+  color: $gray;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+// If you want to add password strength indicator
+.password-strength {
+  margin-top: 0.5rem;
+  height: 4px;
+  background: lighten($dark-bg, 10%);
+  border-radius: 2px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0;
+    background: $secondary;
+    transition: width 0.3s ease;
+  }
+
+  &[data-strength="weak"]::before {
+    width: 30%;
+    background: #F44336;
+  }
+
+  &[data-strength="medium"]::before {
+    width: 60%;
+    background: #FFC107;
+  }
+
+  &[data-strength="strong"]::before {
+    width: 100%;
+    background: $secondary;
+  }
+}
+
+// If you want to add terms checkbox
+.terms-check {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+
+  input {
+    margin-right: 0.5rem;
+  }
+
+  label {
+    color: $gray;
+    font-size: 0.9rem;
+
+    a {
+      color: $primary;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+//google auth
+.google-signin-btn.index {
+  display: flex;
+  justify-content: flex-start;
+}
+.google-signin-btn.sign {
+  justify-content: center;
+}

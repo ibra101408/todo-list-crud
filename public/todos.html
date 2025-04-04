@@ -7,9 +7,9 @@
     <title>Todo List - Todos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link type="text/css" rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/main.css">
     <link type="text/css" rel="stylesheet" href="nav.css">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 </head>
 <body>
 <div id="app">
@@ -40,71 +40,80 @@
 
 
     <div class="container mt-5">
-        <h1 class="todos">Todos</h1>
-
         <div class="row d-flex justify-content-center" data-cy="item-container">
             <div class="col-12 col-md-10 col-lg-8">
                 <div class="card px-3 cardContainer">
                     <div class="card-body">
-                        <div class="add-items d-flex flex-wrap">
-                            <textarea type="text" class="form-control todo-list-input" placeholder="Add your tasks"
-                                      v-model="newItemDescription" data-cy="add-item-input"></textarea>
+                        <div class="form__group field add-items d-flex flex-wrap">
+                            <textarea class="form__field todo-list-input"
+                                      placeholder="What do you need to do?"
+                                      v-model="newItemDescription"
+                                      data-cy="add-item-input"
+                                      id="todo-input"
+                                      @keyup.enter="addItem"
+                                      required>
+                            </textarea>
+                            <label for="todo-input" class="form__label">What do you need to do?</label>
                             <button class="add btn btn-primary font-weight-bold todo-list-add-btn"
-                                    @click="addItem" data-cy="add-item-button">Add
+                                    @click="addItem"
+                                    data-cy="add-item-button">
+                                +
                             </button>
                         </div>
                         <div>
                             <div class="list-wrapper">
                                 <ul class="d-flex flex-column-reverse todo-list" data-cy="list">
-                                    <li v-for="item in items" class="w-100">
+                                    <li v-for="item in items" :key="item.id">
                                         <div class="form-check w-100">
-                                            <label class="form-check-label w-100"
-                                                   :class="{ 'completed': item.completed }">
-                                                <span v-if="!item.editing" data-cy="is-completed"
-                                                      class="task-description" :class="{ 'completed': item.completed }">{{
-                                                        item.description
-                                                    }}</span>
+                                            <label class="form-check-label w-100" :class="{ 'completed': item.completed }">
+
+                                                <!-- Show text when NOT editing -->
+                                                <span v-if="!item.editing"
+                                                      data-cy="is-completed"
+                                                      class="task-description"
+                                                      :class="{ 'completed': item.completed }">
+                                                    {{ item.description }}
+                                                </span>
+
+                                                <!-- Show input when editing -->
+                                                <input v-else
+                                                       type="text"
+                                                       v-model="item.updatedDescription"
+                                                       class="form-control editInput"
+                                                       @keyup.enter="updateItem(item)"
+                                                       @blur="updateItem(item)">
+                                                <!-- @blur: Saves when clicking outside -->
                                             </label>
                                         </div>
-                                        <div class="buttonContainer">
-                                            <button class="btn btn-sm btn-success todoContainerButton" @click="completeItem(item)"
-                                                    data-cy="complete-btn">
-                                                <span class="material-symbols-outlined completedIcon">
-                                                  check_circle
-                                                </span>
-                                            </button>
-                                            <input v-if="item.editing" type="text" v-model="item.updatedDescription"
-                                                   class="form-control mt-2" @keyup.enter="updateItem(item)">
 
-                                            <button class="btn btn-danger btn-sm todoContainerButton" @click="confirmDelete(item)"
+                                        <div class="buttonContainer">
+                                            <!-- Complete button -->
+                                            <button class="btn btn-sm todoContainerButton complete"
+                                                    @click="completeItem(item)"
+                                                    data-cy="complete-btn">
+                                                <span class="material-symbols-outlined completedIcon"
+                                                      :class="{ completedItem: item.completed }">
+                                                    check_circle
+                                                </span>
+                                            </button>
+
+                                            <!-- Delete button -->
+                                            <button class="btn btn-sm todoContainerButton delete"
+                                                    @click="confirmDelete(item)"
                                                     data-cy="delete-button">
-                                                <span class="material-symbols-outlined deleteIcon">
-                                                    delete
-                                                </span>
+                                                <span class="material-symbols-outlined deleteIcon">delete</span>
                                             </button>
-                                            <!--edit-button-->
-                                            <button class="btn btn-secondary btn-sm todoContainerButton"
-                                                    @click="showEditInput(item)" data-cy="edit-button">
-                                                <span class="material-symbols-outlined editIcon">
-                                                    edit
-                                                </span>
-                                            </button>
-                                            <button class="btn btn-primary btn-sm" @click="updateItem(item)"
-                                                    v-if="item.editing">
-                                                <i class="fa fa-save"></i> Save
+
+                                            <!-- Edit button -->
+                                            <button class="btn btn-sm todoContainerButton edit"
+                                                    @click="showEditInput(item)"
+                                                    data-cy="edit-button">
+                                                <span class="material-symbols-outlined editIcon">edit</span>
                                             </button>
                                         </div>
                                     </li>
-                                    <div class="editContainer">
-                                        <input v-if="editItem" type="text" class="form-control"
-                                               v-model="editItem.description" data-cy="edit-description">
-                                        <button v-if="editItem" class="btn btn-primary"
-                                                @click="sendPutItems()" data-cy="update-button">Save changes
-                                        </button>
-                                        <button v-if="editItem" class="btn btn-secondary    "
-                                                @click="editItem = null">Cancel
-                                        </button>
-                                    </div>
+
+
                                 </ul>
                             </div>
                         </div>
@@ -147,18 +156,75 @@
                     newItemDescription: '',
                     editItem: null,
                     wss: null,
+                    isGuest: false,
                 }
             },
 
             created() {
                 this.sessionToken = localStorage.getItem('sessionToken');
-                if (this.sessionToken) {
-                    this.fetchItems();
-                }
+                this.initializeSession();
+
+                /* if (this.sessionToken) {
+                     this.fetchItems();
+                 }*/
             },
 
 
             methods: {
+                async initializeSession() {
+                    // Check if we have a session token
+                    if (this.sessionToken) {
+                        this.fetchItems();
+                    } else {
+                        // Initialize guest session if no token exists
+                        await this.initGuestSession();
+                        this.isGuest = true;
+                        this.fetchItems();
+                    }
+                },
+
+                async initGuestSession() {
+                    try {
+                        const response = await fetch('/api/guest-init', {
+                            method: 'POST',
+                            credentials: 'include'
+                        });
+
+                        if (!response.ok) {
+                            console.error('Failed to initialize guest session');
+                        }
+                    } catch (error) {
+                        console.error('Error initializing guest session:', error);
+                    }
+                },
+
+                async send(method, path, body = null) {
+                    const options = {
+                        method,
+                        credentials: 'include', // Important for cookies
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    };
+
+                    if (this.sessionToken) {
+                        options.headers.Authorization = `Bearer ${this.sessionToken}`;
+                    }
+
+                    if (body) {
+                        options.body = JSON.stringify(body);
+                    }
+
+                    const response = await fetch(`/${path}`, options);
+                    const responseBody = await response.json().catch(() => null);
+
+                    return {
+                        ok: response.ok,
+                        body: responseBody,
+                        status: response.status
+                    };
+                },
+
                 addItem: async function () {
                     const response = await this.send('POST', 'items', {
                         description: this.newItemDescription,
@@ -177,13 +243,19 @@
                     }
                 },
 
-                // Show edit input value
                 showEditInput(item) {
-                    // Convert the item to a plain object
-                    item = JSON.parse(JSON.stringify(item));
-                    this.editItem = item;
+                    // Set editing mode & store the current description
+                    item.editing = true;
+                    item.updatedDescription = item.description;
                 },
 
+                updateItem(item) {
+                    // Save changes and exit editing mode
+                    if (item.updatedDescription.trim() !== '') {
+                        item.description = item.updatedDescription;
+                    }
+                    item.editing = false;
+                },
                 // Update the item
                 sendPutItems: async function () {
                     // Send a PUT request to the API
@@ -267,14 +339,22 @@
                 signOut: async function () {
                     console.log("signing out");
                     try {
+                        // 1. Delete the session (for authenticated users)
                         const response = await fetch('/sessions', {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${this.sessionToken}`
-                            }
+                            },
+                            credentials: 'include' // Important for cookie access
                         });
-                        console.log(response, "OOOK?")
+
+                        // 2. Clear guest cookie if exists (works for both guest and authenticated users)
+                        await fetch('/clear-guest', {
+                            method: 'POST',
+                            credentials: 'include' // Required to clear cookies
+                        });
+
                         if (response.ok) {
                             this.clearStorageAndToggleLoginButtons();
                             this.redirectToMain();
@@ -287,10 +367,12 @@
                     }
                 },
 
-
                 clearStorageAndToggleLoginButtons: function () {
-                    this.sessionToken = '';
                     localStorage.removeItem('sessionToken');
+                    // Clear any guest-related data from localStorage if needed
+                    localStorage.removeItem('guestData');
+                    this.sessionToken = '';
+                    this.isLoggedIn = false;
                 },
                 redirectToMain() {
                     window.location.href = "/"; // Redirect to the main page
